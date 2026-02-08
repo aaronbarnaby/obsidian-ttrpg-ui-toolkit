@@ -1,3 +1,5 @@
+import { Notice } from "obsidian";
+
 export function rollDice(expression: string): { total: number; details: string } {
   const parts = expression.split("+").map(p => p.trim());
   let total = 0;
@@ -23,6 +25,9 @@ export function rollDice(expression: string): { total: number; details: string }
       }
   }
 
+  // Trigger Notice
+  new Notice(`Rolled ${expression} -> ${total}`, 2000);
+
   return { total, details: `[${allRolls.join(", ")}]` };
 }
 
@@ -39,16 +44,19 @@ export function rollDualityDice(modifiers: number[] = []): { total: number; deta
   }
 
   if (allRolls[0] === allRolls[1]) {
-    fate = "CRITICAL SUCCESS";
+    fate = "Crit";
   } else if (allRolls[0] < allRolls[1]) {
-    fate = "HOPE";
+    fate = "Hope";
   } else {
-    fate = "FEAR";
+    fate = "Fear";
   }
 
   for (const modifier of modifiers) {
     total += modifier;
   }
+
+  // Trigger Notice
+  new Notice(`Rolled ${total} with ${fate}`, 2000);
 
   return { total, details: `[${allRolls.join(", ")}]`, fate };
 }

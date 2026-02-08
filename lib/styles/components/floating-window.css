@@ -1,7 +1,12 @@
+:root {
+  --ttrpg-ui-toolkit-left: 100px;
+  --ttrpg-ui-toolkit-top: 100px;
+}
+
 .ttrpg-ui-toolkit-floating-window {
   background-color: var(--background-primary);
-  left: 100px;
-  top: 100px;
+  left: var(--ttrpg-ui-toolkit-left);
+  top: var(--ttrpg-ui-toolkit-top);
   color: var(--text-normal);
   border: 1px solid var(--background-modifier-border);
   border-radius: 0.25rem;

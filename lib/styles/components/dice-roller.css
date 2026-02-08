@@ -36,7 +36,7 @@
     margin-bottom: 8px;
 }
 
-.ttrpg-ui-toolkit-dice-btn {
+.ttrpg-ui-toolkit-dice-btn, .ttrpg-ui-toolkit-dice-roll-btn {
 	padding: 6px 10px;
 	margin: 3px;
 	border-radius: 6px;
@@ -50,7 +50,7 @@
 	cursor: pointer;
 }
 
-.ttrpg-ui-toolkit-dice-queue {
+.ttrpg-ui-toolkit-dice-queue-container {
     margin-bottom: 8px;
     display: flex;
     flex-wrap: wrap;
