@@ -1,0 +1,97 @@
+.ttrpg-ui-toolkit-dice-container {
+	display: flex;
+	flex-wrap: wrap;
+	gap: 8px;
+	margin-bottom: 10px;
+}
+
+.ttrpg-ui-toolkit-dice-roll-body {
+    padding: 10px;
+}
+
+.ttrpg-ui-toolkit-dice-buttons{
+	display: flex;
+}
+.ttrpg-ui-toolkit-roll-btn{
+	margin-left: 3px;
+}
+
+.ttrpg-ui-toolkit-log-container {
+    height: 120px;
+    overflow: auto;
+	width: 333px;
+    background: #222;
+    padding: 5px;
+    border-radius: 4px;
+    margin-bottom: 10px;
+}
+
+.ttrpg-ui-toolkit-label {
+    margin-bottom: 4px;
+	margin-top: 1px;
+}
+
+.ttrpg-ui-toolkit-roll-count {
+    width: 50px;
+    margin-bottom: 8px;
+}
+
+.ttrpg-ui-toolkit-dice-btn {
+	padding: 6px 10px;
+	margin: 3px;
+	border-radius: 6px;
+	border: 1px solid var(--background-modifier-border);
+	background-color: var(--interactive-normal);
+	cursor: pointer;
+}
+
+.ttrpg-ui-toolkit-dice-btn:hover {
+	background-color: var(--interactive-hover);
+	cursor: pointer;
+}
+
+.ttrpg-ui-toolkit-dice-queue {
+    margin-bottom: 8px;
+    display: flex;
+    flex-wrap: wrap;
+    max-width: 333px;
+    justify-content: center;
+    flex-direction: row;
+    align-content: center;
+}
+
+.ttrpg-ui-toolkit-dice-queue-item {
+	display: inline-block;
+	margin-right: 6px;
+	padding: 4px 8px;
+	background-color: var(--background-secondary);
+	border: 1px solid var(--background-modifier-border);
+	border-radius: 4px;
+	font-weight: 600;
+}
+
+.ttrpg-ui-toolkit-multi-roll {
+	margin-bottom: 10px;
+	display: flex;
+	align-items: center;
+	gap: 6px;
+}
+
+.ttrpg-ui-toolkit-dice-log {
+	background-color: var(--background-secondary);
+	border: 1px solid var(--background-modifier-border);
+	padding: 6px;
+	height: 150px;
+	overflow-y: auto;
+	margin-bottom: 8px;
+	font-family: monospace;
+}
+
+.ttrpg-ui-toolkit-dice-controls {
+	display: flex;
+	justify-content: space-between;
+}
+
+.ttrpg-ui-toolkit-clear-log-btn {
+    margin-left: 5px;
+}

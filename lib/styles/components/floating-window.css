@@ -1,0 +1,51 @@
+.ttrpg-ui-toolkit-floating-window {
+  background-color: var(--background-primary);
+  left: 100px;
+  top: 100px;
+  color: var(--text-normal);
+  border: 1px solid var(--background-modifier-border);
+  border-radius: 0.25rem;
+  padding: 0.5rem;
+  z-index: 9999;
+  position: absolute; /* default */
+}
+
+.ttrpg-ui-toolkit-close-btn {
+  float: right;
+  position: absolute;
+  top: 6px;
+  right: 6px;
+  background: transparent;
+  border: none;
+  color: white;
+  font-size: 13px;
+  cursor: pointer;
+  padding: 5px;
+}
+
+.ttrpg-ui-toolkit-floating-header {
+  cursor: grab;
+  font-weight: bold;
+  border-bottom: 2px dotted var(--background-modifier-border);
+  padding-bottom: 12px;
+  margin-bottom: 5px;
+}
+
+.ttrpg-ui-toolkit-grab-cursor-active {
+	cursor: grabbing;
+}
+
+/* During drag movement */
+.ttrpg-ui-toolkit-dragging {
+	  user-select: none;
+}
+
+/* Default grab cursor */
+.ttrpg-ui-toolkit-grab-cursor {
+  cursor: grab;
+}
+
+/* Reset grab cursor state */
+.ttrpg-ui-toolkit-grab-reset {
+  cursor: grab;
+}

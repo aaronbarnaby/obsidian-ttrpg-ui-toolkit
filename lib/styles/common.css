@@ -1,0 +1,138 @@
+/*
+ * Utility Styles
+ * */
+:root {
+  --ttrpg-ui-toolkit-corner: 10px;
+  --ttrpg-ui-toolkit-font: "Myriad Pro";
+  --ttrpg-ui-toolkit-color-primary: #000;
+  --ttrpg-ui-toolkit-color-bg-outer: #bfa980;
+  --ttrpg-ui-toolkit-color-bg-inner: #f5f0e9;
+  --ttrpg-ui-toolkit-color-border: #bfa980;
+  --ttrpg-ui-toolkit-color-void: #784d99;
+  --ttrpg-ui-toolkit-color-umbra: #464ca5;
+  --ttrpg-ui-toolkit-color-sablewood: #14805f;
+  --ttrpg-ui-toolkit-color-Incredible: #3c00c7;
+
+  /* Spacing */
+  --std-gap: 0.3rem;
+  --ability-card-padding: 0.3rem;
+  --std-grid-gap: 0.5rem;
+
+  /* Colors set by user */
+}
+
+.ttrpg-ui-toolkit-pseudo-cut-corners {
+  position: relative;
+  clip-path: none;
+  --df-corner: 4px;
+}
+
+.ttrpg-ui-toolkit-pseudo-cut-corners::before {
+  content: "";
+  position: absolute;
+  z-index: -1;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  clip-path: polygon(
+    var(--df-corner) 0%,
+    calc(100% - var(--df-corner)) 0%,
+    100% var(--df-corner),
+    100% calc(100% - var(--df-corner)),
+    calc(100% - var(--df-corner)) 100%,
+    var(--df-corner) 100%,
+    0% calc(100% - var(--df-corner)),
+    0% var(--df-corner)
+  );
+}
+
+.ttrpg-ui-toolkit-pseudo-cut-corners.outer {
+  filter: drop-shadow(0.2em 0.2em 0.4em rgba(0, 0, 0, 0.5));
+  padding: 1.4px;
+  max-width: 400px;
+  width: 100%;
+  box-sizing: border-box;
+  margin: 0 auto;
+}
+
+.ttrpg-ui-toolkit-pseudo-cut-corners.outer::before {
+  background-color: var(--df-color-bg-outer);
+}
+
+.ttrpg-ui-toolkit-pseudo-cut-corners.inner {
+  padding: 5px;
+  box-sizing: border-box;
+}
+
+.ttrpg-ui-toolkit-pseudo-cut-corners.inner::before {
+  background-color: var(--df-color-bg-inner);
+}
+
+.card-grid {
+    display: grid;
+    gap: var(--std-grid-gap);
+    align-items: start;
+}
+
+/*
+ * Generic Card Styles
+ * */
+
+.generic-card {
+    display: flex;
+    height: 100%;
+    flex-direction: column;
+    align-items: center;
+    justify-content: start;
+    padding: 0.75rem;
+    border-radius: 0.4rem;
+    background-color: var(--color-bg-primary);
+    color: var(--color-text-primary);
+    border: 1px solid var(--color-border-primary);
+    min-height: 80px;
+}
+
+.generic-card-label {
+    font-size: 0.8rem;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    color: var(--color-text-secondary);
+    margin-bottom: 0.5rem;
+}
+
+.generic-card-value {
+    font-size: 1.2rem;
+    font-weight: bold;
+    color: var(--color-text-bright);
+}
+
+.generic-card-sublabel {
+    font-size: 0.7rem;
+    color: var(--color-text-sublabel);
+    margin-top: 0.3rem;
+}
+
+/* Dense card styles */
+.card-grid.dense {
+    gap: calc(var(--std-grid-gap) * 0.6);
+}
+
+.generic-card.dense {
+    padding: 0.5rem;
+    min-height: 60px;
+}
+
+.generic-card.dense .generic-card-label {
+    font-size: 0.7rem;
+    margin-bottom: 0.3rem;
+}
+
+.generic-card.dense .generic-card-value {
+    font-size: 1rem;
+}
+
+.generic-card.dense .generic-card-sublabel {
+    font-size: 0.65rem;
+    margin-top: 0.2rem;
+}

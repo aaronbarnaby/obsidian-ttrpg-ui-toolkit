@@ -1,0 +1,51 @@
+version: "3"
+dotenv:
+  - .env
+tasks:
+  build:
+    desc: Runs the build, supports '--watch' flag
+    cmds:
+      - npm run build
+      # Copy output to $PLUGIN_DIR, forcibly overwriting existing files
+      - |
+        if [ -n "$PLUGIN_DIR" ]; then
+          echo "Copying files to $PLUGIN_DIR (overwriting existing files)"
+          mkdir -p "$PLUGIN_DIR"
+          cp -f main.js manifest.json "$PLUGIN_DIR/"
+          if [ -f styles.css ]; then
+            cp -f styles.css "$PLUGIN_DIR/"
+          fi
+          if [ -d assets ]; then
+            mkdir -p "$PLUGIN_DIR/assets"
+            cp -rf assets/* "$PLUGIN_DIR/assets/"
+          fi
+          echo "Files copied successfully!"
+        else
+          echo "PLUGIN_DIR not set. Skipping copy."
+        fi
+    sources:
+      - "**/*.ts"
+      - "**/*.tsx"
+      - "**/*.css"
+      - "!node_modules/**/*"
+      - "!dist/**/*"
+    generates:
+      - "main.js"
+      - "styles.css"
+
+  pr:
+    desc: Prepare for PR - format code, lint, and type check
+    cmds:
+      - npm run format
+      - npm run lint
+      - npm run typecheck
+      - npm run test
+
+  release:
+    desc: Release a new minor version of the plugin
+    cmds:
+      - npm run format:check
+      - npm run typecheck
+      - npm run lint
+      - npm run test
+      - ./release.sh
