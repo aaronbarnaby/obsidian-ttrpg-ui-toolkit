@@ -7,16 +7,16 @@ export function DNDAbilityView(data: DNDAbility[]) {
       <div className="ability-scores-grid">
         {data.map((item) => (
           <div className={`ability-tile ${item.isProficient ? "proficient" : ""}`} key={item.label}>
-            <div className="header">
-              <p className="stat">{item.label}</p>
-              <p className="score">{item.total}</p>
+            <div className="ability-tile-header">
+              <p className="ability-tile-stat">{item.label}</p>
+              <p className="ability-tile-score">{item.total}</p>
             </div>
-            <div className="divider"></div>
-            <div className="value-wrapper">
-              <div className="value">{AbilityService.formatModifier(item.modifier)}</div>
+            <div className="ability-tile-divider"></div>
+            <div className="ability-tile-value-wrapper">
+              <div className="ability-tile-value">{AbilityService.formatModifier(item.modifier)}</div>
             </div>
 
-            <div className="footer">
+            <div className="ability-tile-footer">
               Saving {AbilityService.formatModifier(item.savingThrow)}
             </div>
           </div>
@@ -32,15 +32,15 @@ export function DaggerHeartAbilityView(data: DaggerHeartAbility[]) {
       <div className="ability-scores-grid">
         {data.map((item) => (
           <div className="ability-tile" key={item.label}>
-            <div className="header">
-              <p className="stat">{item.label}</p>
+            <div className="ability-tile-header">
+              <p className="ability-tile-stat">{item.label}</p>
             </div>
-            <div className="divider"></div>
-            <div className="value-wrapper">
-              <div className="value">{AbilityService.formatModifier(item.modifier)}</div>
+            <div className="ability-tile-divider"></div>
+            <div className="ability-tile-value-wrapper">
+              <div className="ability-tile-value">{AbilityService.formatModifier(item.modifier)}</div>
             </div>
-            <div className="divider"></div>
-            <ul className="list">
+            <div className="ability-tile-divider"></div>
+            <ul className="ability-tile-list">
               {item.list.map((item) => (
                 <li key={item}>{item}</li>
               ))}
