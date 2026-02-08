@@ -40,11 +40,11 @@ export function DaggerHeartAbilityView(data: DaggerHeartAbility[]) {
               <div className="ability-tile-value">{AbilityService.formatModifier(item.modifier)}</div>
             </div>
             <div className="ability-tile-divider"></div>
-            <ul className="ability-tile-list">
+            <div className="ability-tile-list">
               {item.list.map((item) => (
-                <li key={item}>{item}</li>
+                <span key={item}>{item}</span>
               ))}
-            </ul>
+            </div>
           </div>
         ))}
       </div>

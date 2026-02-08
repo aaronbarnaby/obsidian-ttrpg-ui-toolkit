@@ -11,6 +11,14 @@
   --text: rgba(255,255,255,.9);
   --muted: rgba(210,220,240,.75);
   --saving: #7fd6e6;
+
+  /* selected */
+  --sel-panel-0:#1e2e46;
+  --sel-panel-1:#2c4570;
+  --sel-border:#6fa3ff;
+  --sel-divider: rgba(140,180,255,.55);
+  --sel-accent:#9fc3ff;
+  --sel-glow: rgba(110,165,255,.55);
 }
 
 .dnd {
@@ -19,7 +27,7 @@
 }
 
 .daggerheart {
-  --tile-h: 136px;
+  --tile-h: 175px;
   --accent: #ffef9e;
 }
 
@@ -38,7 +46,7 @@
   height: var(--tile-h);
   border-radius: 8px;
   position: relative;
-  overflow:hidden;
+  overflow: hidden;
   background:
     radial-gradient(120% 110% at 90% 10%, rgba(255,255,255,.08) 0%, transparent 55%),
     linear-gradient(180deg, var(--panel-1) 0%, var(--panel-0) 36%, #1c2330 100%);
@@ -46,6 +54,18 @@
   box-shadow:
     0 14px 24px rgba(0,0,0,.45),
     inset 0 1px 0 rgba(255,255,255,.06);
+}
+
+.ability-tile.proficient{
+  background:
+    radial-gradient(120% 110% at 90% 10%, rgba(255,255,255,.12) 0%, transparent 55%),
+    linear-gradient(180deg,var(--sel-panel-1) 0%,var(--sel-panel-0) 40%,#16253d 100%);
+  border-color: var(--sel-border);
+  box-shadow:
+    0 0 0 2px rgba(120,170,255,.25),
+    0 18px 32px rgba(0,0,0,.55),
+    0 0 18px var(--sel-glow),
+    inset 0 1px 0 rgba(255,255,255,.12);
 }
 
 .ability-tile .ability-tile-header {
@@ -58,6 +78,10 @@
   text-transform: uppercase;
   font-size: 12px;
   color: var(--accent);
+}
+
+.ability-tile .ability-tile-header p {
+  margin: 0;
 }
 
 .daggerheart .ability-tile .ability-tile-header .ability-tile-stat {
@@ -104,7 +128,6 @@
 }
 
 .ability-tile .ability-tile-list {
-  list-style:none;
   margin:8px 0 8px;
   padding:0;
   display:flex;

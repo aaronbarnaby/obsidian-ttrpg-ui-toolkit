@@ -80,7 +80,7 @@ export class AbilityScoreView extends BaseView {
         type: 'daggerheart',
         label: label,
         modifier: modifier,
-        list: getDaggerHeartAbilityList(key as keyof typeof abilityBlock.abilities)
+        list: getDaggerHeartAbilityList(key)
       });
     }
     

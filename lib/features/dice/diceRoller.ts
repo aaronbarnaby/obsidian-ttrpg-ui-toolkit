@@ -1,5 +1,5 @@
 import type TTRPGUIToolkitPlugin from "main";
-import { rollDice } from "./dice";
+import { rollDice, rollDualityDice } from "./dice";
 
 let floatingWindowContainer: HTMLDivElement | null = null;
 const diceLog: string[] = [];
@@ -15,13 +15,13 @@ export function openDiceRoller(plugin: TTRPGUIToolkitPlugin) {
   floatingWindowContainer = container;
   container.classList.add("ttrpg-ui-toolkit-floating-window");
 
-  const header = container.createEl("div", { cls: "ttrpg-ui-toolkit-floating-window-header" });
+  const header = container.createEl("div", { cls: "ttrpg-ui-toolkit-floating-header" });
   header.createEl("span", { text: "Dice Roller" });
 
   const closeBtn = header.createEl("button", { text: "✖", cls: "ttrpg-ui-toolkit-close-btn" });
 
   const body = container.createEl("div", { cls: "ttrpg-ui-toolkit-dice-roll-body" });
-  const logContainer = body.createEl("div", { cls: "ttrpg-ui-toolkit-dice-roll-log-container" });
+  const logContainer = body.createEl("div", { cls: "ttrpg-ui-toolkit-dice-log" });
 
   body.createEl("p", { text: "Roll count:", cls: "ttrpg-ui-toolkit-label" });
   const countInput = body.createEl("input", { cls: "ttrpg-ui-toolkit-roll-count" }) as HTMLInputElement;
@@ -37,10 +37,13 @@ export function openDiceRoller(plugin: TTRPGUIToolkitPlugin) {
     const btn = diceButtonsDiv.createEl("button", { text: `d${sides}`, cls: "ttrpg-ui-toolkit-dice-btn" });
     btn.setAttribute("data-sides", sides);
   });
-  const fateDiceBtn = diceButtonsDiv.createEl("button", { text: "Duality", cls: "ttrpg-ui-toolkit-dice-fate-btn" });
+  
 
   const queueContainer = body.createEl("div", { cls: "ttrpg-ui-toolkit-dice-queue-container" });
+
+
   const rollBtn = body.createEl("button", { text: "Roll", cls: "ttrpg-ui-toolkit-dice-roll-btn" });
+  const dualityDiceBtn = body.createEl("button", { text: "Roll Duality Dice", cls: "ttrpg-ui-toolkit-dice-roll-btn" });
   const clearLogBtn = body.createEl("button", { text: "Clear Log", cls: "ttrpg-ui-toolkit-dice-clear-log-btn" });
 
   document.body.appendChild(container);
@@ -117,7 +120,7 @@ export function openDiceRoller(plugin: TTRPGUIToolkitPlugin) {
   }
 
   // --- Dice buttons ---
-  container.querySelectorAll(".df-dice-btn").forEach(btn => {
+  container.querySelectorAll(".ttrpg-ui-toolkit-dice-btn").forEach(btn => {
     const onClick = () => {
         const sides = Number((btn as HTMLElement).dataset.sides);
         const count = Number(countInput.value) || 1;
@@ -139,6 +142,14 @@ export function openDiceRoller(plugin: TTRPGUIToolkitPlugin) {
     updateQueue();
   };
   rollBtn.addEventListener("click", onRoll);
+
+  // --- Roll duality dice button ---
+  const onRollDuality = () => {
+    const result = rollDualityDice();
+    diceLog.push(`Duality Dice: ${result.details} = ${result.total} with ${result.fate}`);
+    updateLog();
+  };
+  dualityDiceBtn.addEventListener("click", onRollDuality);
 
   // --- Clear log button ---
   const onClearLog = () => {

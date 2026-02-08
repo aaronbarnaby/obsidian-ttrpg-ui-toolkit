@@ -25,3 +25,30 @@ export function rollDice(expression: string): { total: number; details: string }
 
   return { total, details: `[${allRolls.join(", ")}]` };
 }
+
+export function rollDualityDice(modifiers: number[] = []): { total: number; details: string, fate: string } {
+  const allRolls: number[] = [];
+  
+  let total = 0;
+  let fate: string = "";
+
+  for (let i = 0; i < 2; i++) {
+    const roll = Math.floor(Math.random() * 12) + 1;
+    allRolls.push(roll);
+    total += roll;
+  }
+
+  if (allRolls[0] === allRolls[1]) {
+    fate = "CRITICAL SUCCESS";
+  } else if (allRolls[0] < allRolls[1]) {
+    fate = "HOPE";
+  } else {
+    fate = "FEAR";
+  }
+
+  for (const modifier of modifiers) {
+    total += modifier;
+  }
+
+  return { total, details: `[${allRolls.join(", ")}]`, fate };
+}

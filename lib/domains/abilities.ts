@@ -18,7 +18,7 @@ export function parseAbilityBlockFromDocument(el: HTMLElement, ctx: MarkdownPost
 }
 
 export function parseAbilityBlock(yamlString: string): AbilityBlock {
-  const def: AbilityBlock = {
+  const dndDefault: AbilityBlock = {
     type: 'dnd',
     abilities: {
       strength: 0,
@@ -32,8 +32,25 @@ export function parseAbilityBlock(yamlString: string): AbilityBlock {
     proficiencies: [],
   };
 
+  const daggerheartDefault: AbilityBlock = {
+    type: 'daggerheart',
+    abilities: {
+      agility: 0,
+      strength: 0,
+      finesse: 0,
+      instinct: 0,
+      presence: 0,
+      knowledge: 0,
+    }
+  };
+
   const parsed = parse(yamlString);
-  return Utils.mergeWithDefaults(parsed, def);
+
+  if (parsed.type === 'daggerheart') {
+    return Utils.mergeWithDefaults(parsed, daggerheartDefault);
+  }
+
+  return Utils.mergeWithDefaults(parsed, dndDefault);
 }
 
 // Calculate ability modifier according to D&D 5e rules
@@ -68,8 +85,8 @@ export function getSavingThrowBonus(ability: keyof DNDAbilityScores, modifiers: 
   return savingThrowModifiers.reduce((sum, mod) => sum + mod.value, 0);
 }
 
-export function getDaggerHeartAbilityList(ability: keyof DaggerHeartAbilityScores): string[] {
-  switch (ability) {
+export function getDaggerHeartAbilityList(ability: string): string[] {
+  switch (ability.toLowerCase()) {
     case 'agility':
       return ['Sprint', 'Dodge', 'Leap'];
     case 'strength':
