@@ -15,6 +15,7 @@ import { THEMES } from "lib/themes";
 import { msgbus } from "lib/services/event-bus";
 import * as Fm from "lib/domains/frontmatter";
 import { openDiceRoller } from "lib/features/dice/diceRoller";
+import { diceInlinePostProcessor } from "lib/features/dice/dicePostProcessor";
 
 export default class TTRPGUIToolkitPlugin extends Plugin {
   settings: TTRPGUIToolkitSettings;
@@ -101,6 +102,9 @@ export default class TTRPGUIToolkitPlugin extends Plugin {
       });
     }
 
+    // Register inline dice postprocessors
+    this.registerMarkdownPostProcessor((el, ctx) => diceInlinePostProcessor(el, ctx, this.settings.diceResultDuration));
+
     // This adds a settings tab so the user can configure various aspects of the plugin
     this.addSettingTab(new TTRPGSettingsTab(this.app, this));
   }
@@ -114,17 +118,18 @@ export default class TTRPGUIToolkitPlugin extends Plugin {
   }
 
   initRibbonIcon() {
-    this.addRibbonIcon(
-      "scroll-text",
-      "TTRPG UI Toolkit",
-      (evt: MouseEvent) => {
-        const menu = new Menu();
+    this.addRibbonIcon("pocket-knife", "TTRPG UI Toolkit", (evt: MouseEvent) => {
+      const menu = new Menu();
 
-        menu.addItem(item => item.setTitle("Dice Roller").setIcon("dice").onClick(() => openDiceRoller(this)));
+      menu.addItem((item) =>
+        item
+          .setTitle("Dice Roller")
+          .setIcon("dice")
+          .onClick(() => openDiceRoller(this))
+      );
 
-        menu.showAtMouseEvent(evt);
-      }
-    );
+      menu.showAtMouseEvent(evt);
+    });
   }
 
   initCommands() {
@@ -174,6 +179,21 @@ class TTRPGSettingsTab extends PluginSettingTab {
           .setValue(this.plugin.settings.statePath)
           .onChange(async (value) => {
             this.plugin.settings.statePath = value;
+            await this.plugin.saveSettings();
+          })
+      );
+
+    containerEl.createEl("h3", { text: "Dice Roll Settings" });
+
+    new Setting(containerEl)
+      .setName("Dice Result Duration")
+      .setDesc("The duration of the dice result in milliseconds.")
+      .addText((text) =>
+        text
+          .setPlaceholder("3000")
+          .setValue(this.plugin.settings.diceResultDuration.toString())
+          .onChange(async (value) => {
+            this.plugin.settings.diceResultDuration = parseInt(value);
             await this.plugin.saveSettings();
           })
       );
@@ -237,7 +257,11 @@ class TTRPGSettingsTab extends PluginSettingTab {
   }
 
   // Helper method to add color picker setting
-  private addColorSetting(containerEl: HTMLElement, name: string, settingKey: keyof TTRPGUIToolkitSettings): void {
+  private addColorSetting(
+    containerEl: HTMLElement,
+    name: string,
+    settingKey: Extract<keyof TTRPGUIToolkitSettings, `color${string}`>
+  ): void {
     new Setting(containerEl).setName(name).addColorPicker((colorPicker) =>
       colorPicker.setValue(this.plugin.settings[settingKey] as string).onChange(async (value) => {
         this.plugin.settings[settingKey] = value;

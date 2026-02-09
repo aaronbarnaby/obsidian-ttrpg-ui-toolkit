@@ -3,6 +3,8 @@
 /* Components */
 @import "./components/floating-window.css";
 @import "./components/dice-roller.css";
+@import "./components/dice-inline.css";
+@import "./components/dice-toast.css";
 @import "./components/skill-card.css";
 @import "./components/ability-cards.css";
 @import "./components/health-card.css";

@@ -4,6 +4,9 @@ export interface TTRPGUIToolkitSettings {
   statePath: string;
   selectedTheme: string;
 
+  // Dice Roll Settings
+  diceResultDuration: number;
+
   // Color variables
   colorBgPrimary: string;
   colorBgSecondary: string;
@@ -32,6 +35,8 @@ export interface TTRPGUIToolkitSettings {
 export const DEFAULT_SETTINGS: TTRPGUIToolkitSettings = {
   statePath: ".ttrpg-ui-toolkit-state.json",
   selectedTheme: "default",
+
+  diceResultDuration: 3000,
 
   ...THEMES.default.colors,
 };

@@ -1,0 +1,231 @@
+/* ───────────────────────────────────────
+   Dice Toast Notification
+   ─────────────────────────────────────── */
+
+.ttrpg-dice-toast {
+	position: fixed;
+	top: 20px;
+	left: 50%;
+	transform: translateX(-50%);
+	z-index: 10000;
+	min-width: 220px;
+	max-width: 340px;
+	border-radius: 10px;
+	background-color: var(--background-primary);
+	border: 2px solid var(--background-modifier-border);
+	box-shadow: 0 8px 32px rgba(0, 0, 0, 0.35);
+	overflow: hidden;
+	animation: ttrpg-toast-enter 0.35s ease-out;
+	font-family: var(--font-interface);
+}
+
+/* ── Fate-themed border accents ── */
+
+.ttrpg-dice-toast--hope {
+	border-color: #d4a017;
+	box-shadow: 0 8px 32px rgba(212, 160, 23, 0.25);
+}
+
+.ttrpg-dice-toast--fear {
+	border-color: #8b7daa;
+	box-shadow: 0 8px 32px rgba(139, 125, 170, 0.25);
+}
+
+.ttrpg-dice-toast--crit {
+	border-color: #ffd700;
+	box-shadow:
+		0 8px 32px rgba(255, 215, 0, 0.35),
+		0 0 16px rgba(255, 215, 0, 0.2);
+}
+
+/* ── Header ── */
+
+.ttrpg-dice-toast-header {
+	display: flex;
+	align-items: center;
+	gap: 8px;
+	padding: 10px 14px;
+	background-color: var(--background-secondary);
+	border-bottom: 1px solid var(--background-modifier-border);
+}
+
+.ttrpg-dice-toast-icon {
+	font-size: 1.2em;
+}
+
+.ttrpg-dice-toast-title {
+	font-weight: 700;
+	font-size: 0.9em;
+	text-transform: uppercase;
+	letter-spacing: 0.05em;
+	color: var(--text-normal);
+}
+
+/* ── Body ── */
+
+.ttrpg-dice-toast-body {
+	padding: 12px 14px;
+}
+
+.ttrpg-dice-toast-expr {
+	font-size: 0.85em;
+	color: var(--text-muted);
+	margin-bottom: 4px;
+}
+
+.ttrpg-dice-toast-details {
+	font-family: var(--font-monospace);
+	font-size: 0.9em;
+	color: var(--text-normal);
+}
+
+.ttrpg-dice-toast-modifier {
+	font-size: 0.85em;
+	color: var(--text-muted);
+	margin-top: 8px;
+	text-align: center;
+}
+
+/* ── Duality dice row ── */
+
+.ttrpg-dice-toast-duality-row {
+	display: flex;
+	justify-content: center;
+	gap: 16px;
+}
+
+.ttrpg-dice-toast-die {
+	display: flex;
+	flex-direction: column;
+	align-items: center;
+	padding: 10px 18px;
+	border-radius: 8px;
+	border: 2px solid var(--background-modifier-border);
+	background-color: var(--background-secondary);
+	min-width: 80px;
+}
+
+.ttrpg-dice-toast-die-label {
+	font-size: 0.75em;
+	font-weight: 600;
+	text-transform: uppercase;
+	letter-spacing: 0.08em;
+	margin-bottom: 4px;
+}
+
+.ttrpg-dice-toast-die-value {
+	font-size: 1.8em;
+	font-weight: 800;
+	line-height: 1;
+}
+
+/* Hope die styling */
+.ttrpg-dice-toast-die--hope {
+	border-color: #d4a017;
+}
+
+.ttrpg-dice-toast-die--hope .ttrpg-dice-toast-die-label {
+	color: #d4a017;
+}
+
+.ttrpg-dice-toast-die--hope .ttrpg-dice-toast-die-value {
+	color: #e6b422;
+}
+
+/* Fear die styling */
+.ttrpg-dice-toast-die--fear {
+	border-color: #8b7daa;
+}
+
+.ttrpg-dice-toast-die--fear .ttrpg-dice-toast-die-label {
+	color: #8b7daa;
+}
+
+.ttrpg-dice-toast-die--fear .ttrpg-dice-toast-die-value {
+	color: #9d8ec2;
+}
+
+/* ── Footer ── */
+
+.ttrpg-dice-toast-footer {
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	gap: 8px;
+	padding: 10px 14px;
+	background-color: var(--background-secondary);
+	border-top: 1px solid var(--background-modifier-border);
+	flex-wrap: wrap;
+}
+
+.ttrpg-dice-toast-total-label {
+	font-size: 0.8em;
+	font-weight: 600;
+	text-transform: uppercase;
+	letter-spacing: 0.05em;
+	color: var(--text-muted);
+}
+
+.ttrpg-dice-toast-total-value {
+	font-size: 1.4em;
+	font-weight: 800;
+	color: var(--text-normal);
+}
+
+/* ── Fate labels ── */
+
+.ttrpg-dice-toast-fate {
+	font-size: 0.85em;
+	font-weight: 700;
+	text-transform: uppercase;
+	letter-spacing: 0.06em;
+	padding: 2px 8px;
+	border-radius: 4px;
+	width: 100%;
+	text-align: center;
+	margin-top: 4px;
+}
+
+.ttrpg-dice-toast-fate--hope {
+	color: #e6b422;
+	background-color: rgba(212, 160, 23, 0.15);
+}
+
+.ttrpg-dice-toast-fate--fear {
+	color: #9d8ec2;
+	background-color: rgba(139, 125, 170, 0.15);
+}
+
+.ttrpg-dice-toast-fate--crit {
+	color: #ffd700;
+	background-color: rgba(255, 215, 0, 0.15);
+	text-shadow: 0 0 8px rgba(255, 215, 0, 0.6);
+}
+
+/* ── Animations ── */
+
+@keyframes ttrpg-toast-enter {
+	0% {
+		opacity: 0;
+		transform: translateX(-50%) translateY(-30px);
+	}
+	100% {
+		opacity: 1;
+		transform: translateX(-50%) translateY(0);
+	}
+}
+
+@keyframes ttrpg-toast-exit {
+	0% {
+		opacity: 1;
+		transform: translateX(-50%) translateY(0);
+	}
+	100% {
+		opacity: 0;
+		transform: translateX(-50%) translateY(-20px);
+	}
+}
+
+.ttrpg-dice-toast--exit {
+	animation: ttrpg-toast-exit 0.3s ease-in forwards;
+}
