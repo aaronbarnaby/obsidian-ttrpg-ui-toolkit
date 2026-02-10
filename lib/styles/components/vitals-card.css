@@ -136,6 +136,14 @@
   flex-wrap: nowrap;
 }
 
+.dnd-hit-dice-value + .vital-boxes {
+  margin-top: -1rem;
+}
+
+.dnd-death-save-row .vital-boxes {
+  padding: 0.2rem 1rem;
+}
+
 .vital-box {
   width: 22px;
   height: 22px;
@@ -214,4 +222,184 @@
   height: 24px;
   background-color: var(--color-text-primary, #ffffff);
   margin: 0 0.5rem;
+}
+
+/*
+ * DND Vitals Card
+ */
+.dnd-vitals-container {
+  display: flex;
+  padding: 1rem;
+}
+
+.dnd-vitals-grid {
+  display: flex;
+  gap: 1rem;
+  align-items: start;
+}
+
+.dnd-section-box {
+  background-color: var(--color-bg-secondary, #f5f5f5);
+  border: 1px solid var(--color-border-primary, #e0e0e0);
+  border-radius: 12px;
+  padding: 1rem;
+  min-width: 0;
+}
+
+.dnd-section-box-content {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+}
+
+.dnd-vitals-grid .dnd-death-saves-wrapper {
+  margin-top: 1rem;
+}
+
+.dnd-hit-dice-section {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+.dnd-hit-dice-section .dnd-section-label {
+  display: block;
+}
+
+.dnd-hit-dice-columns {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+  align-items: center;
+}
+
+.dnd-hit-dice-column {
+  display: flex;
+  flex-direction: column;
+  gap: 0.4rem;
+  align-items: center;
+  border-top: 1px solid var(--color-border-focus, rgba(109, 124, 186, 0.5));
+  padding-top: 0.5rem;
+}
+
+.dnd-hit-dice-column:first-child {
+  border-top: none;
+  padding-top: 0;
+}
+
+.dnd-hit-dice-value {
+  font-size: 1.75rem;
+  font-weight: 700;
+  color: var(--color-text-primary, #333333);
+}
+
+.dnd-hp-section {
+  display: flex;
+  flex-direction: column;
+  gap: 0.8rem;
+}
+
+.dnd-hp-block {
+  display: flex;
+  flex-direction: column;
+  gap: 0rem;
+  align-items: center;
+  border-top: 1px solid var(--color-border-focus, rgba(109, 124, 186, 0.5));
+  padding-top: 0.5rem;
+}
+
+.dnd-hp-block:first-child {
+  border-top: none;
+  padding-top: 0;
+}
+
+.dnd-hp-value {
+  font-size: 2.5rem;
+  font-weight: 700;
+  color: var(--color-text-primary, #333333);
+}
+
+.dnd-death-saves-section {
+  display: flex;
+  flex-direction: column;
+  gap: 0.6rem;
+}
+
+.dnd-death-saves-section .dnd-section-label {
+  display: block;
+}
+
+.dnd-death-saves-grid {
+  display: flex;
+  flex-direction: column;
+  gap: 0;
+  align-items: center;
+}
+
+.dnd-death-save-row {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.8rem;
+}
+
+.vital-box.death-save-success.active {
+  background-color: var(--color-death-save-success, #2d5016);
+  border-color: var(--color-death-save-success, #2d5016);
+}
+
+.vital-box.death-save-failure.active {
+  background-color: var(--color-death-save-failure, #8b2020);
+  border-color: var(--color-death-save-failure, #8b2020);
+}
+
+.dnd-actions-panel {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+  align-items: center;
+}
+
+.dnd-action-input {
+  width: 100%;
+  max-width: 4rem;
+  padding: 0.4rem 0.5rem;
+  border-radius: 0.4rem;
+  border: 1px solid var(--color-text-primary, #333333);
+  font-size: 1rem;
+  text-align: center;
+  box-sizing: border-box;
+}
+
+.dnd-action-btn {
+  padding: 1rem 1.5rem;
+  border-radius: 0.4rem;
+  font-size: 0.9rem;
+  font-weight: 600;
+  cursor: pointer;
+  border: 2px solid;
+  background: transparent;
+  transition: opacity 0.15s ease;
+  width: 95%;
+}
+
+.dnd-action-btn:hover {
+  opacity: 0.9;
+}
+
+.dnd-action-heal {
+  border-color: var(--color-action-heal, #2d5016);
+  color: var(--color-action-heal, #2d5016);
+}
+
+.dnd-action-damage {
+  border-color: var(--color-action-damage, #8b2020);
+  color: var(--color-action-damage, #8b2020);
+}
+
+.dnd-action-temp {
+  border-color: var(--color-action-temp, #5c2d8b);
+  color: var(--color-action-temp, #5c2d8b);
 }

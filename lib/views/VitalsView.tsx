@@ -2,11 +2,11 @@ import { App, MarkdownPostProcessorContext } from "obsidian";
 import { BaseView } from "./BaseView";
 import { FileContext, useFileContext } from "./filecontext";
 import * as VitalsService from "lib/domains/vitals";
-import { DNDParsedVitalsBlock } from "@/types/dnd/vitals";
 import { DHVitalsBlock, DHVitalsData } from "@/types/daggerheart/vitals";
+import { DNDParsedVitalsBlock, DNDVitalsBlock, DNDVitalsData } from "@/types/dnd/vitals";
 import { KeyValueStore } from "../services/kv/kv";
 import { ReactMarkdown } from "./ReactMarkdown";
-import { DaggerHeartVitalsGrid } from "../components/vitals-card";
+import { DaggerHeartVitalsGrid, DNDVitalsGrid } from "../components/vitals-card";
 import * as ReactDOM from "react-dom/client";
 import * as React from "react";
 
@@ -25,11 +25,11 @@ export class VitalsView extends BaseView {
     const type = vitalsBlock.type;
 
     if (type === "dnd") {
-      const vitalsMarkdown = new VitalsDNDMarkdown(el, source, this.kv, ctx.sourcePath, ctx, this);
+      const vitalsMarkdown = new VitalsDNDMarkdown(el, source, this.app, this.kv, ctx);
       ctx.addChild(vitalsMarkdown);
       return;
     } else if (type === "daggerheart") {
-      const vitalsMarkdown = new VitalsDHMarkdown(el, source, this.kv, ctx.sourcePath, ctx, this);
+      const vitalsMarkdown = new VitalsDHMarkdown(el, source, this.app, this.kv, ctx);
       ctx.addChild(vitalsMarkdown);
       return;
     }
@@ -42,56 +42,14 @@ class VitalsDNDMarkdown extends ReactMarkdown {
   private source: string;
   private kv: KeyValueStore;
   private filePath: string;
-  private fileContext: FileContext;
-  private currentVitalsBlock: DNDParsedVitalsBlock | null = null;
-  private originalVitalsValue: number | string;
+  private ctx: FileContext;
 
-  constructor(
-    el: HTMLElement,
-    source: string,
-    kv: KeyValueStore,
-    filePath: string,
-    ctx: MarkdownPostProcessorContext,
-    baseView: BaseView
-  ) {
+  constructor(el: HTMLElement, source: string, app: App, kv: KeyValueStore, ctx: MarkdownPostProcessorContext) {
     super(el);
     this.source = source;
+    this.ctx = useFileContext(app, ctx);
+    this.filePath = this.ctx.filepath;
     this.kv = kv;
-    this.filePath = filePath;
-    this.fileContext = useFileContext(baseView.app, ctx);
-    //this.originalVitalsValue = HealthService.parseHealthBlock(this.source).health;
-  }
-
-  async onload() {
-    this.render();
-  }
-
-  private setupListeners() {}
-
-  private async render() {}
-}
-
-class VitalsDHMarkdown extends ReactMarkdown {
-  private source: string;
-  private kv: KeyValueStore;
-  private filePath: string;
-  private fileContext: FileContext;
-  private vitalsBlock: DHVitalsBlock;
-
-  constructor(
-    el: HTMLElement,
-    source: string,
-    kv: KeyValueStore,
-    filePath: string,
-    ctx: MarkdownPostProcessorContext,
-    baseView: BaseView
-  ) {
-    super(el);
-    this.source = source;
-    this.kv = kv;
-    this.filePath = filePath;
-    this.fileContext = useFileContext(baseView.app, ctx);
-    this.vitalsBlock = VitalsService.parseVitalsBlock(source) as DHVitalsBlock;
   }
 
   async onload() {
@@ -99,22 +57,152 @@ class VitalsDHMarkdown extends ReactMarkdown {
     await this.render();
   }
 
-  private setupListeners() {}
-
-  private async render() {
-    const data = await VitalsService.loadDHVitalsData(this.vitalsBlock, this.kv, this.filePath);
-
-    if (!this.reactRoot) {
-      this.reactRoot = ReactDOM.createRoot(this.containerEl);
-    }
-
-    this.reactRoot.render(
-      React.createElement(DaggerHeartVitalsGrid, {
-        block: this.vitalsBlock,
-        data,
-        onToggle: (vitalKey: string, index: number) => this.handleToggle(vitalKey, index, data),
+  private setupListeners() {
+    this.addUnloadFn(
+      this.ctx.onFrontmatterChange((_) => {
+        // Re-Render
+        this.render();
       })
     );
+  }
+
+  private async render() {
+    try {
+      const block = VitalsService.parseVitalsBlock(this.source) as DNDVitalsBlock;
+      const parsedBlock: DNDParsedVitalsBlock = {
+        ...block,
+        hitdice: VitalsService.normalizeHitDice(block.hitdice),
+      };
+      const data = await VitalsService.loadDNDVitalsData(block, this.kv, this.filePath);
+
+      if (!this.reactRoot) {
+        this.reactRoot = ReactDOM.createRoot(this.containerEl);
+      }
+
+      this.reactRoot.render(
+        React.createElement(DNDVitalsGrid, {
+          block: parsedBlock,
+          data,
+          onHitDiceToggle: (dice, index) => this.handleHitDiceToggle(dice, index, data, parsedBlock),
+          onDeathSaveToggle: (success, index) => this.handleDeathSaveToggle(success, index, data),
+          onHeal: (amount) => this.handleHeal(amount, data, parsedBlock),
+          onDamage: (amount) => this.handleDamage(amount, data, parsedBlock),
+          onAddTemp: (amount) => this.handleAddTemp(amount, data),
+        })
+      );
+    } catch {
+      throw new Error("Invalid vitals block");
+    }
+  }
+
+  private async handleHitDiceToggle(dice: string, index: number, data: DNDVitalsData, block: DNDParsedVitalsBlock) {
+    const entry = block.hitdice?.find((h) => h.dice === dice);
+    const total = entry?.value ?? 0;
+    const currentUsed = data.hitdice_used[dice] ?? 0;
+    const newUsed = currentUsed >= index + 1 ? index : Math.min(index + 1, total);
+    await VitalsService.saveDNDVitalsField(this.kv, this.filePath, "hitdice_used", {
+      ...data.hitdice_used,
+      [dice]: newUsed,
+    });
+    await this.render();
+  }
+
+  private async handleDeathSaveToggle(success: boolean, index: number, data: DNDVitalsData) {
+    const current = success ? data.death_save_successes : data.death_save_failures;
+    const newVal = current >= index + 1 ? index : Math.min(index + 1, 3);
+    await VitalsService.saveDNDVitalsField(
+      this.kv,
+      this.filePath,
+      success ? "death_save_successes" : "death_save_failures",
+      newVal
+    );
+    await this.render();
+  }
+
+  private async handleHeal(amount: number, data: DNDVitalsData, block: DNDParsedVitalsBlock) {
+    const newHp = Math.min(data.hp + amount, block.hp);
+    await VitalsService.saveDNDVitalsField(this.kv, this.filePath, "hp", newHp);
+
+    if (newHp > 0) {
+      // Clear Death saves
+      await VitalsService.saveDNDVitalsField(this.kv, this.filePath, "death_save_successes", 0);
+      await VitalsService.saveDNDVitalsField(this.kv, this.filePath, "death_save_failures", 0);
+    }
+
+    await this.render();
+  }
+
+  private async handleDamage(amount: number, data: DNDVitalsData, block: DNDParsedVitalsBlock) {
+    let remaining = amount;
+    let newTemp = data.temp_hp;
+    let newHp = data.hp;
+    if (remaining > 0 && newTemp > 0) {
+      const fromTemp = Math.min(remaining, newTemp);
+      newTemp -= fromTemp;
+      remaining -= fromTemp;
+    }
+    if (remaining > 0) {
+      newHp = Math.max(0, newHp - remaining);
+    }
+    await VitalsService.saveDNDVitalsField(this.kv, this.filePath, "temp_hp", newTemp);
+    await VitalsService.saveDNDVitalsField(this.kv, this.filePath, "hp", newHp);
+    await this.render();
+  }
+
+  private async handleAddTemp(amount: number, data: DNDVitalsData) {
+    await VitalsService.saveDNDVitalsField(this.kv, this.filePath, "temp_hp", data.temp_hp + amount);
+    await this.render();
+  }
+}
+
+class VitalsDHMarkdown extends ReactMarkdown {
+  private source: string;
+  private kv: KeyValueStore;
+  private filePath: string;
+  private ctx: FileContext;
+
+  constructor(el: HTMLElement, source: string, app: App, kv: KeyValueStore, ctx: MarkdownPostProcessorContext) {
+    super(el);
+    this.source = source;
+    this.ctx = useFileContext(app, ctx);
+    this.filePath = ctx.sourcePath;
+    this.kv = kv;
+  }
+
+  async onload() {
+    this.setupListeners();
+    await this.render();
+  }
+
+  private setupListeners() {
+    this.addUnloadFn(
+      this.ctx.onFrontmatterChange((_) => {
+        // Re-Render
+        this.render();
+      })
+    );
+  }
+
+  private async render() {
+    try {
+      const block = VitalsService.parseVitalsBlock(this.source) as DHVitalsBlock;
+
+      const data = await VitalsService.loadDHVitalsData(block, this.kv, this.filePath);
+
+      if (!this.reactRoot) {
+        this.reactRoot = ReactDOM.createRoot(this.containerEl);
+      }
+
+      this.reactRoot.render(
+        React.createElement(DaggerHeartVitalsGrid, {
+          block: block,
+          data,
+          onToggle: (vitalKey: string, index: number) => this.handleToggle(vitalKey, index, data),
+        })
+      );
+    } catch {
+      throw new Error("Invalid vitals block");
+    }
   }
 
   private async handleToggle(vitalKey: string, index: number, currentData: DHVitalsData) {

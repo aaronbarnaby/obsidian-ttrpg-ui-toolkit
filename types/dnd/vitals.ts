@@ -1,11 +1,10 @@
 import { DNDCoreBlock } from "./core";
-import { ResetConfig } from "../core";
 
 export type DNDVitalsBlock = DNDCoreBlock & {
-  hp: number | string; // Allow string for template support
-  hitdice: DNDHitDice | DNDHitDice[];
-  death_saves?: boolean;
-  reset_on?: string | string[]; // Event type(s) that trigger a reset, defaults to 'long-rest'
+  hp: number; // max hp
+  hitdice: DNDHitDice | DNDHitDice[]; // for single and multi class
+  death_saves?: boolean; // show death saves always
+  hide_actions?: boolean;
 };
 
 export type DNDHitDice = {
@@ -13,16 +12,14 @@ export type DNDHitDice = {
   value: number;
 };
 
-export type DNDParsedVitalsBlock = Omit<DNDVitalsBlock, "reset_on" | "hitdice"> & {
-  reset_on?: ResetConfig[]; // Normalized to always be an array of objects
+export type DNDParsedVitalsBlock = Omit<DNDVitalsBlock, "hitdice"> & {
   hitdice?: DNDHitDice[]; // Normalized to always be an array
 };
 
 export type DNDVitalsData = DNDCoreBlock & {
   hp: number;
-  max_hp: number;
   temp_hp: number;
-  used_hitdice: number;
+  hitdice_used: Record<string, number>;
   death_save_successes: number;
   death_save_failures: number;
-}
+};
