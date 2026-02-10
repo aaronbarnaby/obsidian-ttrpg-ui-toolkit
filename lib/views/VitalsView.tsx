@@ -2,7 +2,7 @@ import { App, MarkdownPostProcessorContext } from "obsidian";
 import { BaseView } from "./BaseView";
 import { FileContext, useFileContext } from "./filecontext";
 import * as VitalsService from "lib/domains/vitals";
-import { DNDParsedVitalsBlock, DNDVitalsBlock } from "@/types/dnd/vitals";
+import { DNDParsedVitalsBlock } from "@/types/dnd/vitals";
 import { DHVitalsBlock, DHVitalsData } from "@/types/daggerheart/vitals";
 import { KeyValueStore } from "../services/kv/kv";
 import { ReactMarkdown } from "./ReactMarkdown";
@@ -68,8 +68,7 @@ class VitalsDNDMarkdown extends ReactMarkdown {
 
   private setupListeners() {}
 
-  private async render() {
-  }
+  private async render() {}
 }
 
 class VitalsDHMarkdown extends ReactMarkdown {
@@ -103,11 +102,7 @@ class VitalsDHMarkdown extends ReactMarkdown {
   private setupListeners() {}
 
   private async render() {
-    const data = await VitalsService.loadDHVitalsData(
-      this.vitalsBlock,
-      this.kv,
-      this.filePath
-    );
+    const data = await VitalsService.loadDHVitalsData(this.vitalsBlock, this.kv, this.filePath);
 
     if (!this.reactRoot) {
       this.reactRoot = ReactDOM.createRoot(this.containerEl);
@@ -115,27 +110,30 @@ class VitalsDHMarkdown extends ReactMarkdown {
 
     this.reactRoot.render(
       React.createElement(DaggerHeartVitalsGrid, {
+        block: this.vitalsBlock,
         data,
-        onToggle: (vitalKey: string, index: number) =>
-          this.handleToggle(vitalKey, index, data),
+        onToggle: (vitalKey: string, index: number) => this.handleToggle(vitalKey, index, data),
       })
     );
   }
 
-  private async handleToggle(
-    vitalKey: string,
-    index: number,
-    currentData: DHVitalsData
-  ) {
-    // Determine total and current used for this vital
-    const totalKey = vitalKey.replace("_used", "_blocks") as keyof DHVitalsData;
-    const usedKey = ("used_" + vitalKey.replace("_used", "_blocks")) as keyof DHVitalsData;
-    const total = currentData[totalKey] as number;
-    const currentUsed = currentData[usedKey] as number;
+  private async handleToggle(vitalKey: string, index: number, currentData: DHVitalsData) {
+    let total: number;
+    let currentUsed: number;
+
+    if (vitalKey === "hope") {
+      total = 6; // TODO: Create a setting for max hope?
+      currentUsed = currentData.hope as number;
+    } else {
+      const totalKey = vitalKey.replace("_used", "_blocks") as keyof DHVitalsData;
+      const usedKey = ("used_" + vitalKey.replace("_used", "_blocks")) as keyof DHVitalsData;
+      total = currentData[totalKey] as number;
+      currentUsed = currentData[usedKey] as number;
+    }
 
     // Toggle logic: clicking the last active box turns it off, otherwise fill up to clicked box
     let newUsed: number;
-    if (currentUsed === index + 1) {
+    if (currentUsed >= index + 1) {
       newUsed = index;
     } else {
       newUsed = Math.min(index + 1, total);

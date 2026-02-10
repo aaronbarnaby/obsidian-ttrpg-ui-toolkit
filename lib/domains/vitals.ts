@@ -11,10 +11,11 @@ export function parseVitalsBlock(yamlString: string): VitalsBlock {
   if (parsed.type === "daggerheart") {
     const dhDefaults: DHVitalsBlock = {
       type: "daggerheart",
-      hp: 0,
-      stress: 0,
-      armor: 0,
-      hope: 0,
+      hp: 5,
+      stress: 6,
+      armor: 3,
+      evasion: 10,
+      thresholds: [4, 10],
     };
     const base = Utils.mergeWithDefaults(parsed, dhDefaults);
     return base;
@@ -46,7 +47,7 @@ export async function loadDHVitalsData(
   const usedHp = (await kv.get<number>(dhKvKey(filePath, "hp_used"))) ?? 0;
   const usedStress = (await kv.get<number>(dhKvKey(filePath, "stress_used"))) ?? 0;
   const usedArmor = (await kv.get<number>(dhKvKey(filePath, "armor_used"))) ?? 0;
-  const usedHope = (await kv.get<number>(dhKvKey(filePath, "hope_used"))) ?? 0;
+  const hope = (await kv.get<number>(dhKvKey(filePath, "hope"))) ?? 0;
 
   return {
     type: "daggerheart",
@@ -56,8 +57,7 @@ export async function loadDHVitalsData(
     used_stress_blocks: Math.min(usedStress, block.stress),
     armor_blocks: block.armor,
     used_armor_blocks: Math.min(usedArmor, block.armor),
-    hope_blocks: block.hope,
-    used_hope_blocks: Math.min(usedHope, block.hope),
+    hope,
   };
 }
 

@@ -4,7 +4,8 @@ export type DHVitalsBlock = DHCoreBlock & {
   hp: number;
   stress: number;
   armor: number;
-  hope: number;
+  evasion: number;
+  thresholds: [number, number];
 };
 
 export type DHVitalsData = DHCoreBlock & {
@@ -14,6 +15,5 @@ export type DHVitalsData = DHCoreBlock & {
   used_stress_blocks: number;
   armor_blocks: number;
   used_armor_blocks: number;
-  hope_blocks: number;
-  used_hope_blocks: number;
-}
+  hope: number;
+};
