@@ -1,5 +1,5 @@
-import { StatItem, StatsBlock } from "../types";
 import { ReactNode } from "react";
+import { StatItem, StatsBlock } from "../../types/core";
 
 export function StatCard({ item, dense }: { item: StatItem & { isProficient?: boolean }; dense?: boolean }) {
   return (

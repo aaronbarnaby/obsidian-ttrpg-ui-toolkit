@@ -33,7 +33,7 @@ jobs:
             --title="$tag" \
             --draft=false \
             --notes-from-tag \
-            main.js manifest.json styles.css
+            dist/main.js manifest.json dist/styles.css
 
   deploy-docs:
     needs: build

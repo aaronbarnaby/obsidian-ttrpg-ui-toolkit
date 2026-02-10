@@ -1,4 +1,4 @@
-import { Frontmatter } from "lib/types";
+import { Frontmatter } from "types/core";
 import * as Fm from "lib/domains/frontmatter";
 import { App, MarkdownPostProcessorContext } from "obsidian";
 import { msgbus } from "lib/services/event-bus";

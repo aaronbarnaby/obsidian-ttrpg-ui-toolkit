@@ -1,4 +1,4 @@
-import { Frontmatter } from "lib/types";
+import { Frontmatter } from "types/core";
 
 export interface ResetEvent {
   filePath: string; // Source file path for scoping

@@ -3,21 +3,26 @@ import { DNDAbilityView, DaggerHeartAbilityView } from "lib/components/ability-c
 import { BaseView } from "./BaseView";
 import { MarkdownPostProcessorContext } from "obsidian";
 import * as AbilityService from "lib/domains/abilities";
-import { DNDAbility, DNDAbilityBlock, DaggerHeartAbility, DaggerHeartAbilityBlock } from "lib/types";
 import { useFileContext } from "./filecontext";
 import { msgbus } from "lib/services/event-bus";
 import { getDaggerHeartAbilityList } from "lib/domains/abilities";
+import { DNDAbility, DNDAbilityBlock, DNDAbilityName } from "types/dnd/abilities";
+import { DHAbility, DHAbilityBlock } from "types/daggerheart/abilities";
+import { Frontmatter } from "types/core";
 
 export class AbilityScoreView extends BaseView {
   public codeblock = "ability";
 
   public render(source: string, __: HTMLElement, ctx: MarkdownPostProcessorContext): string {
+    const fc = useFileContext(this.app, ctx);
+    const frontmatter = fc.frontmatter();
+
     const abilityBlock = AbilityService.parseAbilityBlock(source);
 
     const type = abilityBlock.type;
     
     if (type === 'dnd') {
-      return this.renderDND(abilityBlock, ctx);
+      return this.renderDND(abilityBlock, frontmatter, ctx);
     } else if (type === 'daggerheart') {
       return this.renderDaggerHeart(abilityBlock, ctx);
     }
@@ -25,10 +30,7 @@ export class AbilityScoreView extends BaseView {
     return "";
   }
 
-  private renderDND(abilityBlock: DNDAbilityBlock, ctx: MarkdownPostProcessorContext) {
-    const fc = useFileContext(this.app, ctx);
-    const frontmatter = fc.frontmatter();
-
+  private renderDND(abilityBlock: DNDAbilityBlock, frontmatter: Frontmatter, ctx: MarkdownPostProcessorContext) {
     const data: DNDAbility[] = [];
 
     for (const [key, value] of Object.entries(abilityBlock.abilities)) {
@@ -39,7 +41,7 @@ export class AbilityScoreView extends BaseView {
       // Calculate total ability score including score modifiers
       const totalScore = AbilityService.getTotalScore(
         value,
-        key as keyof typeof abilityBlock.abilities,
+        key as DNDAbilityName,
         abilityBlock.bonuses
       );
 
@@ -49,7 +51,7 @@ export class AbilityScoreView extends BaseView {
         savingThrowValue += frontmatter.proficiency_bonus ?? 0;
       }
       savingThrowValue += AbilityService.getSavingThrowBonus(
-        key as keyof typeof abilityBlock.abilities,
+        key as DNDAbilityName,
         abilityBlock.bonuses
       );
 
@@ -69,8 +71,8 @@ export class AbilityScoreView extends BaseView {
     return Tmpl.Render(DNDAbilityView(data));
   }
 
-  private renderDaggerHeart(abilityBlock: DaggerHeartAbilityBlock, ctx: MarkdownPostProcessorContext) {
-    const data: DaggerHeartAbility[] = [];
+  private renderDaggerHeart(abilityBlock: DHAbilityBlock, ctx: MarkdownPostProcessorContext) {
+    const data: DHAbility[] = [];
 
     for (const [key, value] of Object.entries(abilityBlock.abilities)) {
       const label = key.toUpperCase();

@@ -1,14 +1,11 @@
-import { BadgeItem, BadgesBlock } from "../types";
+import * as React from "react";
+import { BadgeItem, BadgesBlock } from "../../types/core";
 
 export function Badge({ item }: { item: BadgeItem }) {
   const els = [
     <>{item.label && <span className="badge-label">{item.label}</span>}</>,
     <>{item.value && <span className="badge-value">{item.value}</span>}</>,
   ];
-
-  if (item.reverse) {
-    els.reverse();
-  }
 
   return <div className="badge-item">{els}</div>;
 }

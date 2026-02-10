@@ -1,0 +1,64 @@
+/*
+ * DaggerHeart Vitals Card
+ */
+.vitals-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: var(--std-grid-gap);
+}
+
+.vital-row {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.4rem 0.6rem;
+  background-color: var(--color-bg-primary);
+  border: 1px solid var(--color-border-primary);
+  border-radius: 0.4rem;
+}
+
+.vital-label {
+  font-size: 0.8rem;
+  font-weight: 600;
+  text-transform: capitalize;
+  letter-spacing: 0.5px;
+  color: var(--color-text-secondary);
+  white-space: nowrap;
+  min-width: 3rem;
+}
+
+.vital-boxes {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.3rem;
+  align-items: center;
+}
+
+/* Base vital box — rounded rectangle */
+.vital-box {
+  width: 20px;
+  height: 14px;
+  border-radius: 3px;
+  border: 1.5px solid var(--color-border-primary);
+  background-color: transparent;
+  cursor: pointer;
+  padding: 0;
+  transition: background-color 0.15s ease;
+}
+
+.vital-box:hover {
+  border-color: var(--color-text-secondary);
+}
+
+.vital-box.active {
+  background-color: var(--color-text-secondary);
+  border-color: var(--color-text-secondary);
+}
+
+/* Diamond variant for Hope */
+.vital-box.diamond {
+  width: 16px;
+  height: 16px;
+  border-radius: 2px;
+  transform: rotate(45deg);
+}

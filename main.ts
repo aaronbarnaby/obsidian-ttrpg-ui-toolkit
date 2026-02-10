@@ -1,64 +1,23 @@
 import { App, Menu, Plugin, PluginSettingTab, Setting } from "obsidian";
 import { AbilityScoreView } from "lib/views/AbilityScoreView";
-import { BaseView } from "lib/views/BaseView";
-import { SkillsView } from "lib/views/SkillsView";
-import { HealthView } from "lib/views/HealthView";
-import { ConsumableView } from "lib/views/ConsumableView";
-import { BadgesView, StatsView } from "lib/views/BadgesView";
-import { InitiativeView } from "lib/views/InitiativeView";
-import { SpellComponentsView } from "lib/views/SpellComponentsView";
-import { EventButtonsView } from "lib/views/EventButtonsView";
 import { KeyValueStore } from "lib/services/kv/kv";
 import { JsonDataStore } from "./lib/services/kv/local-file-store";
 import { DEFAULT_SETTINGS, TTRPGUIToolkitSettings } from "settings";
-import { THEMES } from "lib/themes";
 import { msgbus } from "lib/services/event-bus";
 import * as Fm from "lib/domains/frontmatter";
 import { openDiceRoller } from "lib/features/dice/diceRoller";
 import { diceInlinePostProcessor } from "lib/features/dice/dicePostProcessor";
+import { BaseView } from "lib/views/BaseView";
+import { BadgesView, StatsView } from "./lib/views/BadgesView";
+import { SkillsView } from "./lib/views/SkillsView";
+import { VitalsView } from "./lib/views/VitalsView";
 
 export default class TTRPGUIToolkitPlugin extends Plugin {
   settings: TTRPGUIToolkitSettings;
   dataStore: JsonDataStore;
 
-  applyColorSettings(): void {
-    const apply = (root: HTMLElement) => {
-      Object.entries(this.settings).forEach(([key, value]) => {
-        if (key.startsWith("color")) {
-          const cssVarName = `--${key.replace(/([A-Z])/g, "-$1").toLowerCase()}`;
-          root.style.setProperty(cssVarName, value as string);
-        }
-      });
-    };
-
-    // Apply to main document
-    const root = document.documentElement;
-    if (root) {
-      apply(root);
-    }
-
-    // Apply to all open windows
-    this.app.workspace.iterateAllLeaves((leaf) => {
-      const windowDoc = leaf.view.containerEl.ownerDocument;
-      if (windowDoc) {
-        apply(windowDoc.documentElement);
-      }
-    });
-  }
-
   async onload() {
     await this.loadSettings();
-
-    // Apply color settings on load
-    this.applyColorSettings();
-
-    // Listen for new windows and apply settings to them
-    this.registerEvent(
-      this.app.workspace.on("window-open", () => {
-        // Use setTimeout to ensure the window is fully initialized
-        setTimeout(() => this.applyColorSettings(), 100);
-      })
-    );
 
     this.initRibbonIcon();
     this.initCommands();
@@ -83,16 +42,12 @@ export default class TTRPGUIToolkitPlugin extends Plugin {
     const views: BaseView[] = [
       // Static
       new StatsView(app),
+      new BadgesView(app),
       new AbilityScoreView(app),
       new SkillsView(app),
-      new BadgesView(app),
-      new SpellComponentsView(app),
-      new EventButtonsView(app),
 
       // Dynamic/Stateful
-      new HealthView(app, kv),
-      new ConsumableView(app, kv),
-      new InitiativeView(app, kv),
+      new VitalsView(app, kv)
     ];
 
     for (const view of views) {
@@ -197,77 +152,5 @@ class TTRPGSettingsTab extends PluginSettingTab {
             await this.plugin.saveSettings();
           })
       );
-
-    containerEl.createEl("h3", { text: "Styles" });
-
-    // Theme selector
-    new Setting(containerEl)
-      .setName("Theme Preset")
-      .setDesc("Choose a predefined color theme. Selecting a theme will update all color values.")
-      .addDropdown((dropdown) => {
-        Object.entries(THEMES).forEach(([key, theme]) => {
-          dropdown.addOption(key, theme.name);
-        });
-        dropdown.setValue(this.plugin.settings.selectedTheme).onChange(async (value) => {
-          this.plugin.settings.selectedTheme = value;
-          const theme = THEMES[value];
-          if (theme) {
-            Object.assign(this.plugin.settings, theme.colors);
-            await this.plugin.saveSettings();
-            this.plugin.applyColorSettings();
-            this.display(); // Refresh the settings display
-          }
-        });
-      });
-
-    // Add color inputs for each color variable
-    this.addColorSetting(containerEl, "Background Primary", "colorBgPrimary");
-    this.addColorSetting(containerEl, "Background Secondary", "colorBgSecondary");
-    this.addColorSetting(containerEl, "Background Tertiary", "colorBgTertiary");
-    this.addColorSetting(containerEl, "Background Hover", "colorBgHover");
-    this.addColorSetting(containerEl, "Background Darker", "colorBgDarker");
-    this.addColorSetting(containerEl, "Background Group", "colorBgGroup");
-    this.addColorSetting(containerEl, "Background Proficient", "colorBgProficient");
-
-    this.addColorSetting(containerEl, "Text Primary", "colorTextPrimary");
-    this.addColorSetting(containerEl, "Text Secondary", "colorTextSecondary");
-    this.addColorSetting(containerEl, "Text Sublabel", "colorTextSublabel");
-    this.addColorSetting(containerEl, "Text Bright", "colorTextBright");
-    this.addColorSetting(containerEl, "Text Muted", "colorTextMuted");
-    this.addColorSetting(containerEl, "Text Group", "colorTextGroup");
-
-    this.addColorSetting(containerEl, "Border Primary", "colorBorderPrimary");
-    this.addColorSetting(containerEl, "Border Active", "colorBorderActive");
-    this.addColorSetting(containerEl, "Border Focus", "colorBorderFocus");
-
-    this.addColorSetting(containerEl, "Accent Teal", "colorAccentTeal");
-    this.addColorSetting(containerEl, "Accent Red", "colorAccentRed");
-    this.addColorSetting(containerEl, "Accent Purple", "colorAccentPurple");
-
-    new Setting(containerEl).setName("Reset Styles").addButton((b) => {
-      b.setButtonText("Reset").onClick(async () => {
-        this.plugin.settings.selectedTheme = "default";
-        const defaultTheme = THEMES.default;
-        Object.assign(this.plugin.settings, defaultTheme.colors);
-        await this.plugin.saveSettings();
-        this.plugin.applyColorSettings();
-        this.display();
-      });
-    });
-  }
-
-  // Helper method to add color picker setting
-  private addColorSetting(
-    containerEl: HTMLElement,
-    name: string,
-    settingKey: Extract<keyof TTRPGUIToolkitSettings, `color${string}`>
-  ): void {
-    new Setting(containerEl).setName(name).addColorPicker((colorPicker) =>
-      colorPicker.setValue(this.plugin.settings[settingKey] as string).onChange(async (value) => {
-        this.plugin.settings[settingKey] = value;
-        await this.plugin.saveSettings();
-        this.plugin.applyColorSettings();
-      })
-    );
   }
 }

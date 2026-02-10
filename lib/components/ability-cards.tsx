@@ -1,5 +1,6 @@
+import { DNDAbility } from "types/dnd/abilities";
 import * as AbilityService from "../domains/abilities";
-import { DNDAbility, DaggerHeartAbility } from "../types";
+import { DHAbility } from "types/daggerheart/abilities";
 
 export function DNDAbilityView(data: DNDAbility[]) {
   return (
@@ -26,7 +27,7 @@ export function DNDAbilityView(data: DNDAbility[]) {
   );
 }
 
-export function DaggerHeartAbilityView(data: DaggerHeartAbility[]) {
+export function DaggerHeartAbilityView(data: DHAbility[]) {
   return (
     <div className="daggerheart ability-scores-container">
       <div className="ability-scores-grid">

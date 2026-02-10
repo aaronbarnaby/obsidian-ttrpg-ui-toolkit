@@ -26,3 +26,5 @@ styles.css
 .claude
 docs/.vitepress/cache/deps
 docs/.vitepress/dist
+
+dist

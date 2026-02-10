@@ -1,4 +1,4 @@
-import { Frontmatter } from "lib/types";
+import { Frontmatter } from "types/core";
 
 export interface UnparsedFrontmatter {
   [key: string]: any;
