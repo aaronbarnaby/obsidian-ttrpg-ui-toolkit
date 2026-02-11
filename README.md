@@ -16,15 +16,15 @@ a beautiful markdown components for Obsidian.
 #### The following features are part of the original **DnD UI Toolkit**.
 
 - General Components
-  - Badges
+  - Badges (Reskinned)
   - Consumables
   - Spell Components
-  - Stats
+  - Stats (Reskinned)
 
 - Character Sheet
   - Ability Scores (Reskinned + Daggerheart Support)
-  - Skills
-  - Health Points
+  - Skills (Reskinned + Daggerheart Support)
+  - Health Points (Reskinned + Daggerheart Support)
   - Event Buttons
 
 - Dungeon Master

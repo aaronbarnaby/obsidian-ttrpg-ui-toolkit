@@ -23,7 +23,15 @@ export default withMermaid(
 					items: [
 						{ text: "Quick Start", link: "/getting-started/quick-start" },
 					],
-				}
+				},
+				{
+					text: "Features",
+					items: [
+						{ text: "Dice Roller Popup", link: "/features/dice-roller-popup" },
+						{ text: "Inline Dice (Post Processor)", link: "/features/dice-post-processor" },
+						{ text: "Codeblock Views", link: "/features/codeblock-views" },
+					],
+				},
 			],
 
 			socialLinks: [{ icon: "github", link: "https://github.com/aaronbarnaby/obsidian-ttrpg-ui-toolkit" }],
