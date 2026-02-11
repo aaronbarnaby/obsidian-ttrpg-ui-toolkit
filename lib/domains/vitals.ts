@@ -4,6 +4,13 @@ import * as Utils from "lib/utils/utils";
 import { VitalsBlockInput } from "@/types/vitals";
 import { KeyValueStore } from "lib/services/kv/kv";
 import { parse } from "yaml";
+import {
+  hasTemplateVariables,
+  processTemplate,
+  parseTemplateNumber,
+  parseTemplateThresholds,
+  TemplateContext,
+} from "lib/utils/template";
 
 export function parseVitalsBlock(yamlString: string): VitalsBlockInput {
   const parsed = parse(yamlString);
@@ -30,6 +37,56 @@ export function parseVitalsBlock(yamlString: string): VitalsBlockInput {
   }
 
   throw new Error("Invalid vitals block type");
+}
+
+/**
+ * Resolve a single numeric vitals field (may contain template expressions).
+ */
+function resolveDHVitalsNum(
+  value: string | number,
+  templateContext: TemplateContext | null,
+  fallback: number
+): number {
+  if (typeof value === "number") return value;
+  const s = String(value ?? "");
+  return parseTemplateNumber(
+    templateContext && hasTemplateVariables(s) ? processTemplate(s, templateContext) : s,
+    fallback
+  );
+}
+
+/**
+ * Resolve DH vitals block input (with optional template strings) to a concrete DHVitalsBlock.
+ * Shared by VitalsView and InitiativeView party loading.
+ */
+export function resolveDHVitalsBlockFromInput(
+  input: DHVitalsBlockInput,
+  templateContext: TemplateContext | null
+): DHVitalsBlock {
+  const hp = resolveDHVitalsNum(input.hp, templateContext, 5);
+  const stress = resolveDHVitalsNum(input.stress, templateContext, 6);
+  const armor = resolveDHVitalsNum(input.armor, templateContext, 3);
+  const evasion = resolveDHVitalsNum(input.evasion, templateContext, 10);
+  const thresholdsIn = input.thresholds;
+  const thresholds: [number, number] =
+    typeof thresholdsIn === "object"
+      ? thresholdsIn
+      : parseTemplateThresholds(
+          templateContext &&
+            typeof thresholdsIn === "string" &&
+            hasTemplateVariables(thresholdsIn)
+            ? processTemplate(thresholdsIn, templateContext)
+            : String(thresholdsIn ?? "4, 10"),
+          [4, 10]
+        );
+  return {
+    ...input,
+    hp,
+    stress,
+    armor,
+    evasion,
+    thresholds,
+  };
 }
 
 function dhKvKey(filePath: string, field: string): string {

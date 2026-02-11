@@ -1,7 +1,10 @@
 import * as Handlebars from "handlebars";
+import { App, TFile } from "obsidian";
 import { Frontmatter } from "@/types/core";
 import { FileContext } from "../views/filecontext";
-import { parseAbilityBlockFromDocument } from "../domains/abilities";
+import { parseAbilityBlockFromDocument, parseAbilityBlock } from "../domains/abilities";
+import * as Fm from "../domains/frontmatter";
+import { extractFirstCodeBlock } from "./codeblock-extractor";
 
 export interface TemplateContext {
   frontmatter: Frontmatter;
@@ -58,6 +61,37 @@ export function createTemplateContext(el: HTMLElement, ctx: FileContext): Templa
     abilities = abilityBlock.abilities;
   } catch (error) {
     console.error("Error parsing ability block:", error);
+  }
+
+  return {
+    frontmatter,
+    abilities,
+  };
+}
+
+/**
+ * Load TemplateContext (frontmatter + abilities) for an external file by path.
+ * Use when resolving party member files from the initiative block.
+ */
+export async function loadTemplateContextForFile(app: App, filePath: string): Promise<TemplateContext> {
+  const rawFm = app.metadataCache.getCache(filePath)?.frontmatter;
+  const frontmatter = Fm.anyIntoFrontMatter(rawFm ?? {});
+
+  let abilities: Record<string, number> = {};
+
+  try {
+    const file = app.vault.getAbstractFileByPath(filePath);
+    if (!file || !(file instanceof TFile)) {
+      return { frontmatter, abilities };
+    }
+    const content = await app.vault.read(file);
+    const abilityContent = extractFirstCodeBlock(content, "ability");
+    if (abilityContent) {
+      const block = parseAbilityBlock(abilityContent);
+      abilities = block.abilities ?? {};
+    }
+  } catch (error) {
+    console.error("Error loading template context for file:", filePath, error);
   }
 
   return {

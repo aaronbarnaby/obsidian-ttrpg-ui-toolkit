@@ -11,7 +11,6 @@ import {
   createTemplateContext,
   hasTemplateVariables,
   parseTemplateNumber,
-  parseTemplateThresholds,
   processTemplate,
 } from "../utils/template";
 import * as ReactDOM from "react-dom/client";
@@ -228,53 +227,25 @@ class VitalsDHMarkdown extends ReactMarkdown {
     );
   }
 
-  private resolveNum(
-    value: string,
-    templateContext: ReturnType<typeof createTemplateContext> | null,
-    fallback: number
-  ): number {
-    return parseTemplateNumber(
-      templateContext && hasTemplateVariables(value) ? processTemplate(value, templateContext) : value,
-      fallback
+  private static hasDHVitalsTemplates(input: DHVitalsBlockInput): boolean {
+    const { hp, stress, armor, evasion, thresholds } = input;
+    return (
+      (typeof hp === "string" && hasTemplateVariables(String(hp ?? ""))) ||
+      (typeof stress === "string" && hasTemplateVariables(String(stress ?? ""))) ||
+      (typeof armor === "string" && hasTemplateVariables(String(armor ?? ""))) ||
+      (typeof evasion === "string" && hasTemplateVariables(String(evasion ?? ""))) ||
+      (typeof thresholds === "string" && hasTemplateVariables(String(thresholds ?? "")))
     );
   }
 
   private async render() {
     try {
       const inputBlock = VitalsService.parseVitalsBlock(this.source) as DHVitalsBlockInput;
-      const { hp: hpIn, stress: stressIn, armor: armorIn, evasion: evasionIn, thresholds: thresholdsIn } = inputBlock;
-      const hasTemplates =
-        (typeof hpIn === "string" && hasTemplateVariables(String(hpIn || ""))) ||
-        (typeof stressIn === "string" && hasTemplateVariables(String(stressIn || ""))) ||
-        (typeof armorIn === "string" && hasTemplateVariables(String(armorIn || ""))) ||
-        (typeof evasionIn === "string" && hasTemplateVariables(String(evasionIn || ""))) ||
-        (typeof thresholdsIn === "string" && hasTemplateVariables(String(thresholdsIn || "")));
+      const hasTemplates = VitalsDHMarkdown.hasDHVitalsTemplates(inputBlock);
       if (hasTemplates) this.isTemplate = true;
 
       const templateContext = hasTemplates ? createTemplateContext(this.containerEl, this.ctx) : null;
-      const hp = this.resolveNum(String(hpIn || ""), templateContext, 5);
-      const stress = this.resolveNum(String(stressIn || ""), templateContext, 6);
-      const armor = this.resolveNum(String(armorIn || ""), templateContext, 3);
-      const evasion = this.resolveNum(String(evasionIn || ""), templateContext, 10);
-      const thresholds: [number, number] =
-        typeof thresholdsIn === "object"
-          ? thresholdsIn
-          : parseTemplateThresholds(
-              templateContext && typeof thresholdsIn === "string" && hasTemplateVariables(thresholdsIn)
-                ? processTemplate(thresholdsIn, templateContext)
-                : String(thresholdsIn ?? "4, 10"),
-              [4, 10]
-            );
-
-      const block: DHVitalsBlock = {
-        ...inputBlock,
-        hp,
-        stress,
-        armor,
-        evasion,
-        thresholds,
-      };
-
+      const block = VitalsService.resolveDHVitalsBlockFromInput(inputBlock, templateContext);
       const data = await VitalsService.loadDHVitalsData(block, this.kv, this.filePath);
 
       if (!this.reactRoot) {
