@@ -68,6 +68,10 @@ class VitalsDNDMarkdown extends ReactMarkdown {
   private setupListeners() {
     this.addUnloadFn(
       this.ctx.onFrontmatterChange((_) => {
+        if (!this.isTemplate) {
+          return;
+        }
+
         this.render();
       })
     );
@@ -209,6 +213,10 @@ class VitalsDHMarkdown extends ReactMarkdown {
   private setupListeners() {
     this.addUnloadFn(
       this.ctx.onFrontmatterChange((_) => {
+        if (!this.isTemplate) {
+          return;
+        }
+
         this.render();
       })
     );
@@ -221,11 +229,10 @@ class VitalsDHMarkdown extends ReactMarkdown {
   }
 
   private resolveNum(
-    value: number | string,
+    value: string,
     templateContext: ReturnType<typeof createTemplateContext> | null,
     fallback: number
   ): number {
-    if (typeof value === "number") return value;
     return parseTemplateNumber(
       templateContext && hasTemplateVariables(value) ? processTemplate(value, templateContext) : value,
       fallback
@@ -237,18 +244,18 @@ class VitalsDHMarkdown extends ReactMarkdown {
       const inputBlock = VitalsService.parseVitalsBlock(this.source) as DHVitalsBlockInput;
       const { hp: hpIn, stress: stressIn, armor: armorIn, evasion: evasionIn, thresholds: thresholdsIn } = inputBlock;
       const hasTemplates =
-        (typeof hpIn === "string" && hasTemplateVariables(hpIn)) ||
-        (typeof stressIn === "string" && hasTemplateVariables(stressIn)) ||
-        (typeof armorIn === "string" && hasTemplateVariables(armorIn)) ||
-        (typeof evasionIn === "string" && hasTemplateVariables(evasionIn)) ||
-        (typeof thresholdsIn === "string" && hasTemplateVariables(thresholdsIn));
+        (typeof hpIn === "string" && hasTemplateVariables(String(hpIn || ""))) ||
+        (typeof stressIn === "string" && hasTemplateVariables(String(stressIn || ""))) ||
+        (typeof armorIn === "string" && hasTemplateVariables(String(armorIn || ""))) ||
+        (typeof evasionIn === "string" && hasTemplateVariables(String(evasionIn || ""))) ||
+        (typeof thresholdsIn === "string" && hasTemplateVariables(String(thresholdsIn || "")));
       if (hasTemplates) this.isTemplate = true;
 
       const templateContext = hasTemplates ? createTemplateContext(this.containerEl, this.ctx) : null;
-      const hp = this.resolveNum(hpIn, templateContext, 5);
-      const stress = this.resolveNum(stressIn, templateContext, 6);
-      const armor = this.resolveNum(armorIn, templateContext, 3);
-      const evasion = this.resolveNum(evasionIn, templateContext, 10);
+      const hp = this.resolveNum(String(hpIn || ""), templateContext, 5);
+      const stress = this.resolveNum(String(stressIn || ""), templateContext, 6);
+      const armor = this.resolveNum(String(armorIn || ""), templateContext, 3);
+      const evasion = this.resolveNum(String(evasionIn || ""), templateContext, 10);
       const thresholds: [number, number] =
         typeof thresholdsIn === "object"
           ? thresholdsIn
