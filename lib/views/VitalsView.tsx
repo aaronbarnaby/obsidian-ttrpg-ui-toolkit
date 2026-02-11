@@ -2,11 +2,18 @@ import { App, MarkdownPostProcessorContext } from "obsidian";
 import { BaseView } from "./BaseView";
 import { FileContext, useFileContext } from "./filecontext";
 import * as VitalsService from "lib/domains/vitals";
-import { DHVitalsBlock, DHVitalsData } from "@/types/daggerheart/vitals";
-import { DNDParsedVitalsBlock, DNDVitalsBlock, DNDVitalsData } from "@/types/dnd/vitals";
+import { DHVitalsBlock, DHVitalsBlockInput, DHVitalsData } from "@/types/daggerheart/vitals";
+import { DNDParsedVitalsBlock, DNDVitalsBlock, DNDVitalsBlockInput, DNDVitalsData } from "@/types/dnd/vitals";
 import { KeyValueStore } from "../services/kv/kv";
 import { ReactMarkdown } from "./ReactMarkdown";
 import { DaggerHeartVitalsGrid, DNDVitalsGrid } from "../components/vitals-card";
+import {
+  createTemplateContext,
+  hasTemplateVariables,
+  parseTemplateNumber,
+  parseTemplateThresholds,
+  processTemplate,
+} from "../utils/template";
 import * as ReactDOM from "react-dom/client";
 import * as React from "react";
 
@@ -43,6 +50,7 @@ class VitalsDNDMarkdown extends ReactMarkdown {
   private kv: KeyValueStore;
   private filePath: string;
   private ctx: FileContext;
+  private isTemplate = false;
 
   constructor(el: HTMLElement, source: string, app: App, kv: KeyValueStore, ctx: MarkdownPostProcessorContext) {
     super(el);
@@ -60,7 +68,12 @@ class VitalsDNDMarkdown extends ReactMarkdown {
   private setupListeners() {
     this.addUnloadFn(
       this.ctx.onFrontmatterChange((_) => {
-        // Re-Render
+        this.render();
+      })
+    );
+    this.addUnloadFn(
+      this.ctx.onAbilitiesChange(() => {
+        if (!this.isTemplate) return;
         this.render();
       })
     );
@@ -68,7 +81,25 @@ class VitalsDNDMarkdown extends ReactMarkdown {
 
   private async render() {
     try {
-      const block = VitalsService.parseVitalsBlock(this.source) as DNDVitalsBlock;
+      const inputBlock = VitalsService.parseVitalsBlock(this.source) as DNDVitalsBlockInput;
+      const hpRaw = inputBlock.hp;
+      const hasTemplates = typeof hpRaw === "string" && hasTemplateVariables(hpRaw);
+      if (hasTemplates) this.isTemplate = true;
+
+      let templateContext = null;
+      if (hasTemplates) {
+        templateContext = createTemplateContext(this.containerEl, this.ctx);
+      }
+
+      const hpResolved =
+        typeof hpRaw === "number"
+          ? hpRaw
+          : parseTemplateNumber(
+              templateContext ? processTemplate(hpRaw, templateContext) : String(hpRaw),
+              0
+            );
+
+      const block: DNDVitalsBlock = { ...inputBlock, hp: hpResolved };
       const parsedBlock: DNDParsedVitalsBlock = {
         ...block,
         hitdice: VitalsService.normalizeHitDice(block.hitdice),
@@ -160,6 +191,7 @@ class VitalsDHMarkdown extends ReactMarkdown {
   private kv: KeyValueStore;
   private filePath: string;
   private ctx: FileContext;
+  private isTemplate = false;
 
   constructor(el: HTMLElement, source: string, app: App, kv: KeyValueStore, ctx: MarkdownPostProcessorContext) {
     super(el);
@@ -177,15 +209,64 @@ class VitalsDHMarkdown extends ReactMarkdown {
   private setupListeners() {
     this.addUnloadFn(
       this.ctx.onFrontmatterChange((_) => {
-        // Re-Render
+        this.render();
+      })
+    );
+    this.addUnloadFn(
+      this.ctx.onAbilitiesChange(() => {
+        if (!this.isTemplate) return;
         this.render();
       })
     );
   }
 
+  private resolveNum(
+    value: number | string,
+    templateContext: ReturnType<typeof createTemplateContext> | null,
+    fallback: number
+  ): number {
+    if (typeof value === "number") return value;
+    return parseTemplateNumber(
+      templateContext && hasTemplateVariables(value) ? processTemplate(value, templateContext) : value,
+      fallback
+    );
+  }
+
   private async render() {
     try {
-      const block = VitalsService.parseVitalsBlock(this.source) as DHVitalsBlock;
+      const inputBlock = VitalsService.parseVitalsBlock(this.source) as DHVitalsBlockInput;
+      const { hp: hpIn, stress: stressIn, armor: armorIn, evasion: evasionIn, thresholds: thresholdsIn } = inputBlock;
+      const hasTemplates =
+        (typeof hpIn === "string" && hasTemplateVariables(hpIn)) ||
+        (typeof stressIn === "string" && hasTemplateVariables(stressIn)) ||
+        (typeof armorIn === "string" && hasTemplateVariables(armorIn)) ||
+        (typeof evasionIn === "string" && hasTemplateVariables(evasionIn)) ||
+        (typeof thresholdsIn === "string" && hasTemplateVariables(thresholdsIn));
+      if (hasTemplates) this.isTemplate = true;
+
+      const templateContext = hasTemplates ? createTemplateContext(this.containerEl, this.ctx) : null;
+      const hp = this.resolveNum(hpIn, templateContext, 5);
+      const stress = this.resolveNum(stressIn, templateContext, 6);
+      const armor = this.resolveNum(armorIn, templateContext, 3);
+      const evasion = this.resolveNum(evasionIn, templateContext, 10);
+      const thresholds: [number, number] =
+        typeof thresholdsIn === "object"
+          ? thresholdsIn
+          : parseTemplateThresholds(
+              templateContext && typeof thresholdsIn === "string" && hasTemplateVariables(thresholdsIn)
+                ? processTemplate(thresholdsIn, templateContext)
+                : String(thresholdsIn ?? "4, 10"),
+              [4, 10]
+            );
+
+      const block: DHVitalsBlock = {
+        ...inputBlock,
+        hp,
+        stress,
+        armor,
+        evasion,
+        thresholds,
+      };
 
       const data = await VitalsService.loadDHVitalsData(block, this.kv, this.filePath);
 

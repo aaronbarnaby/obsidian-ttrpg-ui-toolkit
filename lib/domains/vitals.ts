@@ -1,15 +1,15 @@
-import { DHVitalsBlock, DHVitalsData } from "@/types/daggerheart/vitals";
-import { DNDHitDice, DNDVitalsBlock, DNDVitalsData } from "@/types/dnd/vitals";
+import { DHVitalsBlock, DHVitalsBlockInput, DHVitalsData } from "@/types/daggerheart/vitals";
+import { DNDHitDice, DNDVitalsBlock, DNDVitalsBlockInput, DNDVitalsData } from "@/types/dnd/vitals";
 import * as Utils from "lib/utils/utils";
-import { VitalsBlock } from "@/types/vitals";
+import { VitalsBlockInput } from "@/types/vitals";
 import { KeyValueStore } from "lib/services/kv/kv";
 import { parse } from "yaml";
 
-export function parseVitalsBlock(yamlString: string): VitalsBlock {
+export function parseVitalsBlock(yamlString: string): VitalsBlockInput {
   const parsed = parse(yamlString);
 
   if (parsed.type === "daggerheart") {
-    const dhDefaults: DHVitalsBlock = {
+    const dhDefaults: DHVitalsBlockInput = {
       type: "daggerheart",
       hp: 5,
       stress: 6,
@@ -20,7 +20,7 @@ export function parseVitalsBlock(yamlString: string): VitalsBlock {
     const base = Utils.mergeWithDefaults(parsed, dhDefaults);
     return base;
   } else if (parsed.type === "dnd") {
-    const dndDefaults: DNDVitalsBlock = {
+    const dndDefaults: DNDVitalsBlockInput = {
       type: "dnd",
       hp: 0,
       hitdice: [],

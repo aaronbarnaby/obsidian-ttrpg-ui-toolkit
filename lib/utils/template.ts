@@ -65,3 +65,20 @@ export function createTemplateContext(el: HTMLElement, ctx: FileContext): Templa
     abilities,
   };
 }
+
+/** Coerce a template result string to number; use fallback when NaN. */
+export function parseTemplateNumber(s: string, fallback: number): number {
+  const n = Number(s);
+  return Number.isNaN(n) ? fallback : n;
+}
+
+/** Parse a string like "4, 10" or "4 10" to [number, number]; use fallbacks when invalid. */
+export function parseTemplateThresholds(
+  s: string,
+  fallback: [number, number]
+): [number, number] {
+  const parts = s.split(/[\s,]+/).map((p) => Number(p.trim())).filter((n) => !Number.isNaN(n));
+  const a = parts[0] ?? fallback[0];
+  const b = parts[1] ?? fallback[1];
+  return [a, b];
+}

@@ -1,10 +1,16 @@
 import { DNDCoreBlock } from "./core";
 
-export type DNDVitalsBlock = DNDCoreBlock & {
-  hp: number; // max hp
+/** Parsed block from YAML; hp may be a template string. */
+export type DNDVitalsBlockInput = DNDCoreBlock & {
+  hp: number | string; // max hp (string = template)
   hitdice: DNDHitDice | DNDHitDice[]; // for single and multi class
   death_saves?: boolean; // show death saves always
   hide_actions?: boolean;
+};
+
+/** Resolved block with numeric hp for domain/components. */
+export type DNDVitalsBlock = Omit<DNDVitalsBlockInput, "hp"> & {
+  hp: number;
 };
 
 export type DNDHitDice = {
