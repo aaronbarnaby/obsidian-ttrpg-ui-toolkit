@@ -36,7 +36,7 @@ dense: false
 
 - **label** and **value** support **Handlebars** templates.
 - Context: `frontmatter` (note frontmatter) and `abilities` (parsed ability modifiers from an `ability` block in the document).
-- Example: `value: "{{add frontmatter.base_ac 2}}"` (uses the plugin’s `add` helper).
+- Example: <code>value: "&#123;&#123;add frontmatter.base_ac 2&#125;&#125;"</code> (uses the plugin’s `add` helper).
 - The block re-renders when frontmatter or abilities change (e.g. after editing the `ability` block).
 
 ---
@@ -225,7 +225,7 @@ thresholds: [4, 10]
 | Key | Type | Required | Description |
 |-----|------|----------|-------------|
 | `type` | string | Yes | Must be `dnd`. |
-| `hp` | number or string | Yes | Max HP. Can be a template string (e.g. `"{{frontmatter.max_hp}}"`). |
+| `hp` | number or string | Yes | Max HP. Can be a template string (e.g. <code>"&#123;&#123;frontmatter.max_hp&#125;&#125;"</code>). |
 | `hitdice` | array or single | Yes | `{ dice: string, value: number }` (e.g. `d8`, `d6`). Can be one object or list; merged by dice type. |
 | `death_saves` | boolean | No | Show death save track. |
 | `hide_actions` | boolean | No | Hide action buttons. |
@@ -243,7 +243,7 @@ thresholds: [4, 10]
 
 ### Templates
 
-Numeric fields (`hp`, and for Daggerheart `stress`, `armor`, `evasion`, `thresholds`) can be Handlebars template strings so they resolve from frontmatter or abilities (e.g. `hp: "{{frontmatter.max_hp}}"`). The vitals block re-renders on frontmatter/ability change when templates are used.
+Numeric fields (`hp`, and for Daggerheart `stress`, `armor`, `evasion`, `thresholds`) can be Handlebars template strings so they resolve from frontmatter or abilities (e.g. <code>hp: "&#123;&#123;frontmatter.max_hp&#125;&#125;"</code>). The vitals block re-renders on frontmatter/ability change when templates are used.
 
 ### State and settings
 
