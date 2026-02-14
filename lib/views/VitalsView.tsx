@@ -254,9 +254,9 @@ class VitalsDHMarkdown extends ReactMarkdown {
 
       this.reactRoot.render(
         React.createElement(DaggerHeartVitalsGrid, {
-          block: block,
+          block,
           data,
-          onToggle: (vitalKey: string, index: number) => this.handleToggle(vitalKey, index, data),
+          onToggle: (vitalKey: string, index: number) => this.handleToggle(vitalKey, index, data, block),
         })
       );
     } catch {
@@ -264,7 +264,7 @@ class VitalsDHMarkdown extends ReactMarkdown {
     }
   }
 
-  private async handleToggle(vitalKey: string, index: number, currentData: DHVitalsData) {
+  private async handleToggle(vitalKey: string, index: number, currentData: DHVitalsData, block: DHVitalsBlock) {
     let total: number;
     let currentUsed: number;
 
@@ -272,10 +272,9 @@ class VitalsDHMarkdown extends ReactMarkdown {
       total = 6; // TODO: Create a setting for max hope?
       currentUsed = currentData.hope as number;
     } else {
-      const totalKey = vitalKey.replace("_used", "_blocks") as keyof DHVitalsData;
-      const usedKey = ("used_" + vitalKey.replace("_used", "_blocks")) as keyof DHVitalsData;
-      total = currentData[totalKey] as number;
-      currentUsed = currentData[usedKey] as number;
+      const blockKey = vitalKey.replace("_used", "") as keyof DHVitalsBlock;
+      total = block[blockKey] as number;
+      currentUsed = currentData[vitalKey as keyof DHVitalsData] as number;
     }
 
     // Toggle logic: clicking the last active box turns it off, otherwise fill up to clicked box

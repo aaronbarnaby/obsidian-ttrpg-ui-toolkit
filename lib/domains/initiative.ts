@@ -9,8 +9,10 @@ export function parseInitiativeBlock(yamlString: string): InitiativeBlock {
   if (parsed.type === "daggerheart") {
     const dhDefaults: DHInitiativeBlock = {
       type: "daggerheart",
+      name: "",
       adversaries: [],
       party: [],
+      countdowns: [],
     };
     const base = Utils.mergeWithDefaults(parsed, dhDefaults);
     return base;
@@ -24,10 +26,12 @@ export function parseInitiativeBlock(yamlString: string): InitiativeBlock {
 
 export function getDefaultDHInitiativeState(block: DHInitiativeBlock): DHInitiativeState {
   return {
-    adversaries: block.adversaries.map((_, index) => ({
-      index,
+    adversaries: block.adversaries.map((adv) => ({
+      key: adv.key,
       hp_used: 0,
       stress_used: 0,
+      conditions: [],
     })),
+    countdowns: [],
   };
 }

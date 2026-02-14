@@ -1,4 +1,4 @@
-import { App, MarkdownPostProcessorContext } from "obsidian";
+import { App, MarkdownPostProcessorContext, TFile } from "obsidian";
 import { BaseView } from "./BaseView";
 import { KeyValueStore } from "../services/kv/kv";
 import { ReactMarkdown } from "./ReactMarkdown";
@@ -11,6 +11,7 @@ import { DHInitiativeBlock, DHInitiativeState } from "@/types/daggerheart/initia
 import * as React from "react";
 import { DHInitiative } from "../components/initiative";
 import type { PartyMember } from "../services/party";
+import { Adversary, loadAdversaries } from "../services/adversary";
 
 export class InitiativeView extends BaseView {
   public codeblock = "initiative";
@@ -102,44 +103,42 @@ class DHInitiativeMarkdown extends ReactMarkdown {
       }
 
       const partyMembers = await loadPartyMembers(this.app, this.kv, this.ctx.sourcePath, initiativeBlock);
-      this.renderComponent(initiativeBlock, initiativeState, partyMembers);
+      const adversaries = await loadAdversaries(this.app, this.ctx.sourcePath, initiativeBlock.adversaries);
+      this.renderComponent(initiativeBlock, initiativeState, partyMembers, adversaries);
     } catch (error) {
       console.error("Error loading initiative state", error);
-      const partyMembers = await loadPartyMembers(this.app, this.kv, this.ctx.sourcePath, initiativeBlock).catch(
-        () => []
-      );
-      this.renderComponent(initiativeBlock, defaultState, partyMembers);
+      this.renderComponent(initiativeBlock, defaultState, [], []);
     }
   }
 
-  private async handlePartyMemberHpToggle(
+  private async handlePartyMemberVitalToggle(
     block: DHInitiativeBlock,
     state: DHInitiativeState,
     partyMembers: PartyMember[],
+    adversaries: Adversary[],
     filePath: string,
+    vitalKey: string,
     newUsed: number
   ): Promise<void> {
     try {
-      await VitalsService.toggleDHVitalBlock(this.kv, filePath, "hp_used", newUsed);
+      await VitalsService.toggleDHVitalBlock(this.kv, filePath, vitalKey, newUsed);
     } catch (err) {
-      console.error("Error saving party member HP:", filePath, err);
+      console.error("Error saving party member vital:", filePath, vitalKey, err);
       return;
     }
     const updated = partyMembers.map((m) =>
       m.filePath === filePath && m.vitalsData
-        ? {
-            ...m,
-            vitalsData: { ...m.vitalsData, used_hp_blocks: newUsed },
-          }
+        ? { ...m, vitalsData: { ...m.vitalsData, [vitalKey]: newUsed } }
         : m
     );
-    this.renderComponent(block, state, updated);
+    this.renderComponent(block, state, updated, adversaries);
   }
 
   renderComponent(
     block: DHInitiativeBlock,
     state: DHInitiativeState,
-    partyMembers: PartyMember[]
+    partyMembers: PartyMember[],
+    adversaries: Adversary[]
   ) {
     const stateKey = block.state_key;
     if (!stateKey) return;
@@ -148,12 +147,20 @@ class DHInitiativeMarkdown extends ReactMarkdown {
       static: block,
       state,
       partyMembers,
+      adversaries,
       onStateChange: (newState: DHInitiativeState) => {
         this.handleStateChange(block, newState);
-        this.renderComponent(block, newState, partyMembers);
+        this.renderComponent(block, newState, partyMembers, adversaries);
       },
-      onPartyMemberHpToggle: (filePath: string, newUsed: number) => {
-        this.handlePartyMemberHpToggle(block, state, partyMembers, filePath, newUsed);
+      onPartyMemberVitalsToggle: (filePath: string, key: string, newUsed: number) => {
+        this.handlePartyMemberVitalToggle(block, state, partyMembers, adversaries, filePath, key, newUsed);
+      },
+      onOpenFile: (filePath: string) => {
+        const file = this.app.vault.getAbstractFileByPath(filePath);
+        if (file instanceof TFile) {
+          const leaf = this.app.workspace.getLeaf(true);
+          leaf.openFile(file);
+        }
       },
     };
 

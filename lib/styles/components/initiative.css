@@ -1,0 +1,273 @@
+/*
+ * Initiative / Encounter tracker
+ */
+
+.encounter-tracker {
+  --encounter-bg: #2a2a2a;
+  --encounter-bg-section: #333333;
+  --encounter-bg-row: #3a3a3a;
+  --encounter-border: #505050;
+  --encounter-text: #e0e0e0;
+  --encounter-text-muted: #a0a0a0;
+
+  border: 1px solid var(--encounter-border);
+  border-radius: var(--ttrpg-ui-toolkit-corner);
+  background-color: var(--encounter-bg);
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 0;
+}
+
+.encounter-header {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 1rem;
+  width: 100%;
+  text-align: left;
+  border: none;
+  border-radius: var(--ttrpg-ui-toolkit-corner);
+  background: transparent;
+  color: var(--encounter-text);
+  cursor: pointer;
+  font: inherit;
+}
+
+.encounter-header:hover {
+  background-color: rgba(255, 255, 255, 0.05);
+}
+
+.encounter-label {
+  color: var(--encounter-text-muted);
+  font-size: 0.95rem;
+  white-space: nowrap;
+}
+
+.encounter-name {
+  flex: 1;
+  font-size: 1.2rem;
+  color: var(--encounter-text);
+}
+
+.encounter-toggle {
+  flex-shrink: 0;
+  font-size: 1.2rem;
+  color: var(--encounter-text-muted);
+}
+
+.encounter-header-collapsed .encounter-toggle {
+  margin-left: 0.25rem;
+}
+
+.initiative-section {
+  border-top: 1px solid var(--encounter-border);
+  border-radius: 0;
+  background-color: var(--encounter-bg-section);
+  padding: 0.75rem 1rem 1rem;
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+.initiative-section-title {
+  color: var(--encounter-text);
+  font-size: 1rem;
+  font-weight: 700;
+}
+
+.initiative-row {
+  position: relative;
+  border: 1px solid var(--encounter-border);
+  border-radius: 6px;
+  padding: 0.5rem 0.75rem;
+  padding-top: 1rem;
+  background-color: var(--encounter-bg-row);
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+  margin-top: 1rem;
+}
+
+.initiative-row:first-of-type {
+  margin-top: 0;
+}
+
+/* Name label floated on the top border of the item block */
+.initiative-row-name-label {
+  position: absolute;
+  top: -1em;
+  left: 0.6rem;
+  padding: 0.3rem 0.5rem;
+  font-size: 0.8rem;
+  color: var(--encounter-text);
+  background-color: var(--encounter-bg-row);
+  border: 1px solid var(--encounter-border);
+  border-bottom: none;
+  border-radius: 4px 4px 0 0;
+  white-space: nowrap;
+  max-width: calc(100% - 1.2rem);
+  overflow: hidden;
+  text-overflow: ellipsis;
+  line-height: 1.3;
+  cursor: pointer;
+  user-select: none;
+}
+
+.initiative-row-main {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  flex-wrap: wrap;
+  padding: 0.8rem 0 0 0;
+}
+
+.initiative-row-main.no-padding {
+  padding: 0;
+}
+
+.initiative-row-vitals {
+  display: flex;
+  gap: 1rem;
+  flex-shrink: 0;
+}
+
+/* Override vital box colors inside initiative for neutral grey */
+.encounter-tracker .vital-box-row {
+  margin-right: 2rem;
+}
+
+.encounter-tracker .vital-label {
+  min-width: 2rem;
+}
+
+.encounter-tracker .vital-boxes {
+  background-color: var(--encounter-bg);
+}
+
+.encounter-tracker .vital-box {
+  border-color: var(--encounter-border);
+}
+
+.encounter-tracker .vital-box.active {
+  background-color: var(--encounter-text-muted);
+  border-color: var(--encounter-text-muted);
+}
+
+.encounter-tracker .vital-label {
+  color: var(--encounter-text-muted);
+}
+
+.initiative-expand-trigger {
+  flex-shrink: 0;
+  padding: 0.25rem 0.5rem;
+  font-size: 0.8rem;
+  color: var(--encounter-text-muted);
+  background: transparent;
+  border: none;
+  cursor: pointer;
+  border-radius: 4px;
+}
+
+.initiative-expand-trigger:hover {
+  color: var(--encounter-text);
+  background-color: rgba(255, 255, 255, 0.08);
+}
+
+.initiative-row-extra {
+  padding: 0.5rem 0.75rem;
+  font-size: 0.85rem;
+  color: var(--encounter-text-muted);
+  border-top: 1px solid var(--encounter-border);
+  margin-top: 0.25rem;
+}
+
+.initiative-row-extra-content {
+  display: flex;
+  width: 100%;
+}
+
+.initiative-row-extra-content .badges-row {
+  flex: 1;
+}
+
+.initiative-row-extra-button {}
+
+.initiative-row-expanded .initiative-row-extra {
+  margin-top: 0;
+}
+
+.initiative-open-party-file {
+  display: block;
+  margin-top: 0.5rem;
+  padding: 0.3rem 1rem;
+  font-size: 0.8rem;
+  color: var(--encounter-text-muted);
+  background: none;
+  border: none;
+  cursor: pointer;
+  text-align: left;
+  font: inherit;
+}
+
+.initiative-open-party-file:hover {
+  color: var(--encounter-text);
+  text-decoration: underline;
+}
+
+.initiative-row-empty .initiative-row-name-label {
+  font-style: italic;
+  color: var(--encounter-text-muted);
+}
+
+.initiative-row-empty .initiative-row-main {
+  display: block;
+  min-height: 0.5rem;
+}
+
+.fear-box-row {
+  display: flex;
+  align-items: center;
+  gap: 0.8rem;
+}
+
+.fear-label {
+  font-size: 1.3rem;
+  font-weight: 700;
+  color: var(--encounter-text-muted);
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  white-space: nowrap;
+  min-width: 5rem;
+}
+
+.fear-boxes {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.3rem;
+  align-items: center;
+  background-color: var(--encounter-bg);
+  padding: 0.8rem 1rem;
+  border-radius: 12px;
+}
+
+.fear-box {
+  width: 44px;
+  height: 44px;
+  border-radius: 3px;
+  border: 1.5px solid var(--encounter-border);
+  cursor: pointer;
+  padding: 0;
+  transition:
+    background-color 0.15s ease,
+    border-color 0.15s ease;
+}
+
+.fear-box:hover {
+  border-color: var(--color-text-secondary, #cccccc);
+}
+
+.fear-box.active {
+  background-color: var(--encounter-text-muted);
+  border-color: var(--encounter-text-muted);
+}

@@ -124,12 +124,9 @@ export async function loadDHVitalsData(
 
   return {
     type: "daggerheart",
-    hp_blocks: block.hp,
-    used_hp_blocks: Math.min(usedHp, block.hp),
-    stress_blocks: block.stress,
-    used_stress_blocks: Math.min(usedStress, block.stress),
-    armor_blocks: block.armor,
-    used_armor_blocks: Math.min(usedArmor, block.armor),
+    hp_used: Math.min(usedHp, block.hp),
+    stress_used: Math.min(usedStress, block.stress),
+    armor_used: Math.min(usedArmor, block.armor),
     hope,
   };
 }

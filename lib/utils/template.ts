@@ -1,6 +1,7 @@
 import * as Handlebars from "handlebars";
 import { App, TFile } from "obsidian";
 import { Frontmatter } from "@/types/core";
+import { DHEquipment } from "@/types/daggerheart/equipment";
 import { FileContext } from "../views/filecontext";
 import { parseAbilityBlockFromDocument, parseAbilityBlock } from "../domains/abilities";
 import * as Fm from "../domains/frontmatter";
@@ -9,6 +10,10 @@ import { extractFirstCodeBlock } from "./codeblock-extractor";
 export interface TemplateContext {
   frontmatter: Frontmatter;
   abilities: Record<string, number>;
+}
+
+export interface AdversaryTemplateContext {
+  frontmatter: Frontmatter;
 }
 
 function init() {
@@ -100,6 +105,16 @@ export async function loadTemplateContextForFile(app: App, filePath: string): Pr
   };
 }
 
+
+export async function loadAdversaryTemplateContextForFile(app: App, filePath: string): Promise<AdversaryTemplateContext> {
+  const rawFm = app.metadataCache.getCache(filePath)?.frontmatter;
+  const frontmatter = Fm.anyIntoFrontMatter(rawFm ?? {});
+
+  return {
+    frontmatter,
+  };
+}
+
 /** Coerce a template result string to number; use fallback when NaN. */
 export function parseTemplateNumber(s: string, fallback: number): number {
   const n = Number(s);
@@ -115,4 +130,38 @@ export function parseTemplateThresholds(
   const a = parts[0] ?? fallback[0];
   const b = parts[1] ?? fallback[1];
   return [a, b];
+}
+
+/**
+ * Build a single DHEquipment from a frontmatter object (e.g. from a linked equipment file).
+ */
+export function equipmentFromFrontmatter(
+  fm: Record<string, unknown> | null | undefined
+): DHEquipment {
+  if (fm == null || typeof fm !== "object") {
+    return { name: "", range: "", tier: 1, type: "", damage: "", damage_type: "", burden: "" };
+  }
+  return {
+    name: typeof fm.name === "string" ? fm.name.trim() : "",
+    range: typeof fm.range === "string" ? fm.range.trim() : "",
+    tier: parseTemplateNumber(String(fm.tier ?? ""), 1),
+    type: typeof fm.type === "string" ? fm.type.trim() : "",
+    damage: typeof fm.damage === "string" ? fm.damage.trim() : "",
+    damage_type: typeof fm.damage_type === "string" ? fm.damage_type.trim() : "",
+    burden: typeof fm.burden === "string" ? fm.burden.trim() : "",
+    features: Array.isArray(fm.features) ? (fm.features as unknown[]) as DHEquipment["features"] : undefined,
+  };
+}
+
+/**
+ * Read equipment data from a file's frontmatter by path.
+ * Uses the metadata cache; returns null if the file has no cache or frontmatter.
+ */
+export function loadEquipmentDataForFile(
+  app: App,
+  filePath: string
+): DHEquipment | null {
+  const rawFm = app.metadataCache.getCache(filePath)?.frontmatter;
+  if (rawFm == null) return null;
+  return equipmentFromFrontmatter(rawFm as Record<string, unknown>);
 }

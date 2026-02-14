@@ -19,11 +19,8 @@ export type DHVitalsBlock = Omit<DHVitalsBlockInput, "hp" | "stress" | "armor" |
 };
 
 export type DHVitalsData = DHCoreBlock & {
-  hp_blocks: number;
-  used_hp_blocks: number;
-  stress_blocks: number;
-  used_stress_blocks: number;
-  armor_blocks: number;
-  used_armor_blocks: number;
+  hp_used: number;
+  stress_used: number;
+  armor_used: number;
   hope: number;
 };

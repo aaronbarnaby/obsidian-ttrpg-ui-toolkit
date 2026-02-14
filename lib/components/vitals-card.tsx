@@ -120,8 +120,8 @@ interface DaggerHeartVitalsGridProps {
 
 export function DaggerHeartVitalsGrid({ block, data, onToggle }: DaggerHeartVitalsGridProps) {
   const handleMarkDamage = (hpCount: number) => {
-    const currentUsed = data.used_hp_blocks;
-    const newUsed = Math.min(currentUsed + hpCount, data.hp_blocks);
+    const currentUsed = data.hp_used;
+    const newUsed = Math.min(currentUsed + hpCount, block.hp);
     onToggle("hp_used", newUsed - 1);
   };
 
@@ -130,8 +130,8 @@ export function DaggerHeartVitalsGrid({ block, data, onToggle }: DaggerHeartVita
       <div className="vital-box-row-container">
         <EvasionDisplay evasion={block.evasion} />
         <ArmorDisplay
-          armor={data.armor_blocks}
-          usedArmor={data.used_armor_blocks}
+          armor={block.armor}
+          usedArmor={data.armor_used}
           onToggle={(i) => onToggle("armor_used", i)}
         />
       </div>
@@ -141,15 +141,15 @@ export function DaggerHeartVitalsGrid({ block, data, onToggle }: DaggerHeartVita
       <div className="vital-box-row-container">
         <VitalBoxRow
           label="HP"
-          total={data.hp_blocks}
-          used={data.used_hp_blocks}
+          total={block.hp}
+          used={data.hp_used}
           onToggle={(i) => onToggle("hp_used", i)}
         />
 
         <VitalBoxRow
           label="STRESS"
-          total={data.stress_blocks}
-          used={data.used_stress_blocks}
+          total={block.stress}
+          used={data.stress_used}
           onToggle={(i) => onToggle("stress_used", i)}
         />
       </div>
