@@ -17,10 +17,21 @@ export type ActionFeature = {
   cost?: FeatureCost[];
 };
 
+/** Modifier type: "ability" (affects ability scores) or "property" (affects frontmatter/template values). Missing or unknown type is treated as "property". */
+export type FeatureModifierType = "ability" | "property";
+
 export type FeatureModifier = {
-  type?: string;
-  property: string;  // e.g attack, major_threshold, hp
+  /** "ability" | "property"; defaults to "property" when aggregating. */
+  type?: FeatureModifierType;
+  /** Target: ability name (e.g. strength, Agility) or frontmatter key (e.g. hp, attack). */
+  property: string;
   value: number;
+};
+
+/** Combined modifiers from features + equipment, keyed by type then property name; values are summed. */
+export type AggregatedModifiers = {
+  ability: Record<string, number>;
+  property: Record<string, number>;
 };
 
 

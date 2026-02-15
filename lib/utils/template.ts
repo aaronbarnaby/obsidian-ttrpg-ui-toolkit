@@ -5,6 +5,7 @@ import { DHEquipment } from "@/types/daggerheart/equipment";
 import { FileContext } from "../views/filecontext";
 import { parseAbilityBlockFromDocument, parseAbilityBlock } from "../domains/abilities";
 import * as Fm from "../domains/frontmatter";
+import { getAggregatedModifiersForFile } from "../domains/modifiers";
 import { extractFirstCodeBlock } from "./codeblock-extractor";
 import { Feature } from "@/types/features";
 import { parseFeatureBlock } from "../domains/features";
@@ -59,17 +60,39 @@ export function processTemplate(text: string, context: TemplateContext): string 
   }
 }
 
-export function createTemplateContext(el: HTMLElement, ctx: FileContext): TemplateContext {
-  const frontmatter = ctx.frontmatter();
+/**
+ * Apply property modifiers to a copy of frontmatter (adds modifier values to matching keys).
+ */
+function applyPropertyModifiers(
+  frontmatter: Frontmatter,
+  propertyModifiers: Record<string, number>
+): Frontmatter {
+  const out = { ...frontmatter };
+  for (const key of Object.keys(propertyModifiers)) {
+    const current = out[key];
+    const num = typeof current === "number" && !Number.isNaN(current) ? current : 0;
+    out[key] = num + (propertyModifiers[key] ?? 0);
+  }
+  return out;
+}
+
+export async function createTemplateContext(
+  app: App,
+  el: HTMLElement,
+  ctx: FileContext
+): Promise<TemplateContext> {
+  let frontmatter = ctx.frontmatter();
 
   let abilities: Record<string, number> = {};
-
   try {
     const abilityBlock = parseAbilityBlockFromDocument(el, ctx.md());
-    abilities = abilityBlock.abilities;
+    abilities = abilityBlock.abilities ?? {};
   } catch (error) {
     console.error("Error parsing ability block:", error);
   }
+
+  const modifiers = await getAggregatedModifiersForFile(app, ctx.filepath);
+  frontmatter = applyPropertyModifiers(frontmatter, modifiers.property);
 
   return {
     frontmatter,
@@ -106,13 +129,14 @@ export async function loadFeaturesForFile(app: App, filePath: string): Promise<F
  */
 export async function loadTemplateContextForFile(app: App, filePath: string): Promise<TemplateContext> {
   const rawFm = app.metadataCache.getCache(filePath)?.frontmatter;
-  const frontmatter = Fm.anyIntoFrontMatter(rawFm ?? {});
+  let frontmatter = Fm.anyIntoFrontMatter(rawFm ?? {});
 
   let abilities: Record<string, number> = {};
-
   try {
     const file = app.vault.getAbstractFileByPath(filePath);
     if (!file || !(file instanceof TFile)) {
+      const modifiers = await getAggregatedModifiersForFile(app, filePath);
+      frontmatter = applyPropertyModifiers(frontmatter, modifiers.property);
       return { frontmatter, abilities };
     }
     const content = await app.vault.read(file);
@@ -124,6 +148,9 @@ export async function loadTemplateContextForFile(app: App, filePath: string): Pr
   } catch (error) {
     console.error("Error loading template context for file:", filePath, error);
   }
+
+  const modifiers = await getAggregatedModifiersForFile(app, filePath);
+  frontmatter = applyPropertyModifiers(frontmatter, modifiers.property);
 
   return {
     frontmatter,

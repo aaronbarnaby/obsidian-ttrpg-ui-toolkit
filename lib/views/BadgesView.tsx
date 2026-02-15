@@ -32,6 +32,7 @@ export class StatsView extends BaseView {
 
 class StatsLikeComponent extends ReactMarkdown {
   layout: "badges" | "cards" = "badges"; // Default layout
+  app: App;
   ctx: FileContext;
   source: string; // The source code of the badges block
   isTemplate: boolean; // Indicates that atleast one badge is a template
@@ -39,12 +40,13 @@ class StatsLikeComponent extends ReactMarkdown {
   constructor(el: HTMLElement, source: string, app: App, ctx: MarkdownPostProcessorContext) {
     super(el);
     this.source = source;
+    this.app = app;
     this.ctx = useFileContext(app, ctx);
   }
 
   async onload() {
     this.setupListeners();
-    this.render();
+    await this.render();
   }
 
   private setupListeners() {
@@ -71,7 +73,7 @@ class StatsLikeComponent extends ReactMarkdown {
     )
   }
 
-  private render() {
+  private async render() {
     try {
       const doc = (parseYamlSafe<BadgesBlock | StatsBlock>(this.source));
       const items = Array.isArray(doc.items) ? doc.items : [];
@@ -84,7 +86,7 @@ class StatsLikeComponent extends ReactMarkdown {
 
       let templateContext: TemplateContext | null = null;
       if (hasTemplates) {
-        templateContext = createTemplateContext(this.containerEl, this.ctx);
+        templateContext = await createTemplateContext(this.app, this.containerEl, this.ctx);
         this.isTemplate = true;
       }
 

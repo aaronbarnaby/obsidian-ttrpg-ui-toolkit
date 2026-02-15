@@ -46,6 +46,7 @@ export class VitalsView extends BaseView {
 
 class VitalsDNDMarkdown extends ReactMarkdown {
   private source: string;
+  private app: App;
   private kv: KeyValueStore;
   private filePath: string;
   private ctx: FileContext;
@@ -54,6 +55,7 @@ class VitalsDNDMarkdown extends ReactMarkdown {
   constructor(el: HTMLElement, source: string, app: App, kv: KeyValueStore, ctx: MarkdownPostProcessorContext) {
     super(el);
     this.source = source;
+    this.app = app;
     this.ctx = useFileContext(app, ctx);
     this.filePath = this.ctx.filepath;
     this.kv = kv;
@@ -91,7 +93,7 @@ class VitalsDNDMarkdown extends ReactMarkdown {
 
       let templateContext = null;
       if (hasTemplates) {
-        templateContext = createTemplateContext(this.containerEl, this.ctx);
+        templateContext = await createTemplateContext(this.app, this.containerEl, this.ctx);
       }
 
       const hpResolved =
@@ -191,6 +193,7 @@ class VitalsDNDMarkdown extends ReactMarkdown {
 
 class VitalsDHMarkdown extends ReactMarkdown {
   private source: string;
+  private app: App;
   private kv: KeyValueStore;
   private filePath: string;
   private ctx: FileContext;
@@ -199,6 +202,7 @@ class VitalsDHMarkdown extends ReactMarkdown {
   constructor(el: HTMLElement, source: string, app: App, kv: KeyValueStore, ctx: MarkdownPostProcessorContext) {
     super(el);
     this.source = source;
+    this.app = app;
     this.ctx = useFileContext(app, ctx);
     this.filePath = ctx.sourcePath;
     this.kv = kv;
@@ -244,7 +248,7 @@ class VitalsDHMarkdown extends ReactMarkdown {
       const hasTemplates = VitalsDHMarkdown.hasDHVitalsTemplates(inputBlock);
       if (hasTemplates) this.isTemplate = true;
 
-      const templateContext = hasTemplates ? createTemplateContext(this.containerEl, this.ctx) : null;
+      const templateContext = hasTemplates ? await createTemplateContext(this.app, this.containerEl, this.ctx) : null;
       const block = VitalsService.resolveDHVitalsBlockFromInput(inputBlock, templateContext);
       const data = await VitalsService.loadDHVitalsData(block, this.kv, this.filePath);
 
