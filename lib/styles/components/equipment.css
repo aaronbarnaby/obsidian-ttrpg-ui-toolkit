@@ -1,0 +1,144 @@
+/*
+ * Equipment block (Daggerheart sketch style)
+ * Reuses --encounter-* and --ttrpg-ui-toolkit-corner from features.
+ */
+
+.equipment-block {
+  border: 1px solid var(--encounter-border, #505050);
+  border-radius: var(--ttrpg-ui-toolkit-corner, 10px);
+  background-color: var(--encounter-bg, #2a2a2a);
+  padding: 0.75rem 1rem 1rem;
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+}
+
+.equipment-block-title {
+  font-size: 1rem;
+  font-weight: 600;
+  color: var(--encounter-text-muted, #a0a0a0);
+  margin-bottom: 0.25rem;
+}
+
+.equipment-items {
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+}
+
+/* ── Single item card ── */
+
+.equipment-item {
+  border: 1px solid var(--encounter-border, #505050);
+  border-radius: var(--ttrpg-ui-toolkit-corner, 10px);
+  background-color: var(--encounter-bg-row, #3a3a3a);
+  padding: 0.6rem 0.85rem 0.85rem;
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+.equipment-item-header {
+  display: flex;
+  align-items: baseline;
+  gap: 0.5rem;
+  flex-wrap: wrap;
+}
+
+.equipment-item-name {
+  font-size: 1.25rem;
+  font-weight: 700;
+  color: var(--encounter-text, #e0e0e0);
+}
+
+/* Reset button appearance so it matches .equipment-item-name text */
+button.equipment-item-name--link,
+.equipment-item-name--link {
+  all: unset;
+  box-sizing: border-box;
+  display: inline;
+  font-size: 1.25rem;
+  font-weight: 700;
+  font-family: inherit;
+  line-height: inherit;
+  cursor: pointer;
+  color: var(--link-color, var(--text-accent, #7c9cff));
+  text-align: left;
+}
+
+button.equipment-item-name--link:hover,
+.equipment-item-name--link:hover {
+  text-decoration: underline;
+}
+
+button.equipment-item-name--link:focus-visible,
+.equipment-item-name--link:focus-visible {
+  outline: 1px solid var(--color-border-active, #6d7cba);
+  outline-offset: 2px;
+}
+
+.equipment-item-tier {
+  font-size: 0.95rem;
+  font-weight: 400;
+  color: var(--encounter-text-muted, #a0a0a0);
+}
+
+/* ── Badges row ── */
+
+.equipment-item-badges {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.35rem;
+  align-items: center;
+}
+
+.equipment-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.25rem;
+  padding: 0.2rem 0.5rem;
+  border-radius: 6px;
+  border: 1px solid var(--encounter-border, #505050);
+  background-color: var(--encounter-bg, #2a2a2a);
+  font-size: 0.85rem;
+}
+
+.equipment-badge-label {
+  color: var(--encounter-text-muted, #a0a0a0);
+}
+
+.equipment-badge-value {
+  color: var(--encounter-text, #e0e0e0);
+}
+
+/* Damage badge: code is replaced by dice widget; don't override widget cursor */
+.equipment-badge--damage .ttrpg-dice-inline {
+  cursor: pointer;
+}
+
+.equipment-dice-expr {
+  color: var(--text-accent, #7c9cff);
+  font-size: 0.9rem;
+  font-weight: 600;
+  background: transparent;
+  border: none;
+  padding: 0;
+}
+
+/* ── Features section inside item ── */
+
+.equipment-item-features {
+  margin-top: 0.25rem;
+}
+
+.equipment-item-features .features-block {
+  gap: 0.5rem;
+}
+
+/* ── D&D placeholder ── */
+
+.equipment-block--dnd .equipment-placeholder {
+  font-size: 0.9rem;
+  color: var(--encounter-text-muted, #a0a0a0);
+  margin: 0;
+}

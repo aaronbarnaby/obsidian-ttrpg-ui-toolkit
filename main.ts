@@ -12,6 +12,8 @@ import { BadgesView, StatsView } from "./lib/views/BadgesView";
 import { SkillsView } from "./lib/views/SkillsView";
 import { VitalsView } from "./lib/views/VitalsView";
 import { InitiativeView } from "./lib/views/InitiativeView";
+import { FeaturesView } from "./lib/views/FeaturesView";
+import { EquipmentView } from "./lib/views/EquipmentView";
 
 export default class TTRPGUIToolkitPlugin extends Plugin {
   settings: TTRPGUIToolkitSettings;
@@ -46,6 +48,8 @@ export default class TTRPGUIToolkitPlugin extends Plugin {
       new BadgesView(app),
       new AbilityScoreView(app),
       new SkillsView(app),
+      new FeaturesView(app),
+      new EquipmentView(app, this),
 
       // Dynamic/Stateful
       new VitalsView(app, kv),

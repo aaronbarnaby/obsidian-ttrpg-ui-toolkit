@@ -36,11 +36,11 @@ export function resolveAdversaryEntryToPath(
  * When entry is a string and app/sourcePath are provided, resolves the link and loads
  * equipment data from the linked file's frontmatter via loadEquipmentDataForFile.
  */
-function normalizeEquipmentItem(
+async function normalizeEquipmentItem(
   item: unknown,
   app?: App,
   sourcePath?: string
-): DHEquipment | null {
+): Promise<DHEquipment | null> {
   if (item == null) {
     return null;
   }
@@ -49,7 +49,7 @@ function normalizeEquipmentItem(
     if (app && sourcePath) {
       const filePath = resolveAdversaryEntryToPath(app, item, sourcePath);
       if (filePath) {
-        const equipment = loadEquipmentDataForFile(app, filePath);
+        const equipment = await loadEquipmentDataForFile(app, filePath);
         if (equipment) return equipment;
       }
     }
@@ -62,16 +62,16 @@ function normalizeEquipmentItem(
   return equipmentFromFrontmatter(o);
 }
 
-function normalizeEquipment(
+async function normalizeEquipment(
   raw: unknown,
   app?: App,
   sourcePath?: string
-): DHEquipment[] {
+): Promise<DHEquipment[]> {
   if (raw == null) return [];
   const arr = Array.isArray(raw) ? raw : [raw];
   const result: DHEquipment[] = [];
   for (const item of arr) {
-    const equipment = normalizeEquipmentItem(item, app, sourcePath);
+    const equipment = await normalizeEquipmentItem(item, app, sourcePath);
     if (equipment) result.push(equipment);
   }
   return result;
@@ -89,10 +89,10 @@ export type ResolveAdversaryDataOptions = {
  * Returns null when name is missing or empty so link-based loading skips the entry.
  * When options.app and options.sourcePath are provided, equipped links (e.g. [[Sword]]) are resolved and equipment data is loaded from the linked file's frontmatter.
  */
-export function resolveAdversaryData(
+export async function resolveAdversaryData(
   ctx: AdversaryTemplateContext,
   options?: ResolveAdversaryDataOptions
-): DHAdversary | null {
+): Promise<DHAdversary | null> {
   const fm = ctx.frontmatter;
   const name = typeof fm.name === "string" ? fm.name.trim() : "";
   if (!name) return null;
@@ -110,7 +110,7 @@ export function resolveAdversaryData(
     hp: parseTemplateNumber(String(fm.hp ?? ""), 4),
     stress: parseTemplateNumber(String(fm.stress ?? ""), 3),
     attack: parseTemplateNumber(String(fm.attack ?? ""), 0),
-    equipped: normalizeEquipment(fm.equipped, app, sourcePath),
+    equipped: (await normalizeEquipment(fm.equipped, app, sourcePath)),
   };
 }
 
@@ -132,7 +132,7 @@ async function loadAdversaryFromLink(
 
   const templateContext = await loadAdversaryTemplateContextForFile(app, filePath);
 
-  const data = resolveAdversaryData(templateContext, { app, sourcePath: filePath });
+  const data = await resolveAdversaryData(templateContext, { app, sourcePath: filePath });
   if (!data) return null;
 
   return {

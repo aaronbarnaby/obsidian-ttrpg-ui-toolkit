@@ -6,6 +6,8 @@ import { FileContext } from "../views/filecontext";
 import { parseAbilityBlockFromDocument, parseAbilityBlock } from "../domains/abilities";
 import * as Fm from "../domains/frontmatter";
 import { extractFirstCodeBlock } from "./codeblock-extractor";
+import { Feature } from "@/types/features";
+import { parseFeatureBlock } from "../domains/features";
 
 export interface TemplateContext {
   frontmatter: Frontmatter;
@@ -14,6 +16,7 @@ export interface TemplateContext {
 
 export interface AdversaryTemplateContext {
   frontmatter: Frontmatter;
+  features: Feature;
 }
 
 function init() {
@@ -74,6 +77,29 @@ export function createTemplateContext(el: HTMLElement, ctx: FileContext): Templa
   };
 }
 
+export async function loadFeaturesForFile(app: App, filePath: string): Promise<Feature> {
+  let features: Feature = {
+    passives: [],
+    actions: [],
+  };
+
+  try {
+    const file = app.vault.getAbstractFileByPath(filePath);
+    if (!file || !(file instanceof TFile)) {
+      return features;
+    }
+    const content = await app.vault.read(file);
+    const featureContent = extractFirstCodeBlock(content, "features");
+    if (featureContent) {
+      features = parseFeatureBlock(featureContent);
+    }
+  } catch (err) {
+    console.error("Error loading features for file:", filePath, err);
+  }
+
+  return features;
+}
+
 /**
  * Load TemplateContext (frontmatter + abilities) for an external file by path.
  * Use when resolving party member files from the initiative block.
@@ -109,9 +135,11 @@ export async function loadTemplateContextForFile(app: App, filePath: string): Pr
 export async function loadAdversaryTemplateContextForFile(app: App, filePath: string): Promise<AdversaryTemplateContext> {
   const rawFm = app.metadataCache.getCache(filePath)?.frontmatter;
   const frontmatter = Fm.anyIntoFrontMatter(rawFm ?? {});
+  const features = await loadFeaturesForFile(app, filePath);
 
   return {
     frontmatter,
+    features
   };
 }
 
@@ -137,7 +165,7 @@ export function parseTemplateThresholds(
  */
 export function equipmentFromFrontmatter(
   fm: Record<string, unknown> | null | undefined
-): DHEquipment {
+): Omit<DHEquipment, "features"> {
   if (fm == null || typeof fm !== "object") {
     return { name: "", range: "", tier: 1, type: "", damage: "", damage_type: "", burden: "" };
   }
@@ -149,7 +177,6 @@ export function equipmentFromFrontmatter(
     damage: typeof fm.damage === "string" ? fm.damage.trim() : "",
     damage_type: typeof fm.damage_type === "string" ? fm.damage_type.trim() : "",
     burden: typeof fm.burden === "string" ? fm.burden.trim() : "",
-    features: Array.isArray(fm.features) ? (fm.features as unknown[]) as DHEquipment["features"] : undefined,
   };
 }
 
@@ -157,11 +184,17 @@ export function equipmentFromFrontmatter(
  * Read equipment data from a file's frontmatter by path.
  * Uses the metadata cache; returns null if the file has no cache or frontmatter.
  */
-export function loadEquipmentDataForFile(
+export async function loadEquipmentDataForFile(
   app: App,
   filePath: string
-): DHEquipment | null {
+): Promise<DHEquipment | null> {
   const rawFm = app.metadataCache.getCache(filePath)?.frontmatter;
   if (rawFm == null) return null;
-  return equipmentFromFrontmatter(rawFm as Record<string, unknown>);
+  const equipment = equipmentFromFrontmatter(rawFm as Record<string, unknown>);
+  const features = await loadFeaturesForFile(app, filePath);
+
+  return {
+    ...equipment,
+    features
+  };
 }
