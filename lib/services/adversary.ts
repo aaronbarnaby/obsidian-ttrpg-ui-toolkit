@@ -5,7 +5,7 @@ import {
   loadAdversaryTemplateContextForFile,
   loadEquipmentDataForFile,
   parseTemplateNumber,
-} from "../utils/template";
+} from "@/lib/utils/template";
 import { DHAdversary } from "@/types/daggerheart/adversary";
 import { DHEquipment } from "@/types/daggerheart/equipment";
 import type { DHInitiativeAdversary, DHInitiativeCustomAdversary, DHInitiativeLinkAdversary } from "@/types/daggerheart/initiative";

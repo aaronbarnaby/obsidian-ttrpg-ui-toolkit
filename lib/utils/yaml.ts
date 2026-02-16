@@ -1,6 +1,6 @@
 /**
  * YAML parsing utilities
- * 
+ *
  * Provides safe YAML parsing with error handling.
  * Used throughout the plugin to parse code block contents.
  */

@@ -1,36 +1,8 @@
 import { SkillsBlock } from "@/types/dnd/skills";
-import * as Utils from "lib/utils/utils";
-import { parse } from "yaml";
+import { SkillsService, skillsService } from "@/lib/services/skills/SkillsService";
 
-export const Skills = [
-  { label: "Acrobatics", ability: "dexterity" },
-  { label: "Animal Handling", ability: "wisdom" },
-  { label: "Arcana", ability: "intelligence" },
-  { label: "Athletics", ability: "strength" },
-  { label: "Deception", ability: "charisma" },
-  { label: "History", ability: "intelligence" },
-  { label: "Insight", ability: "wisdom" },
-  { label: "Intimidation", ability: "charisma" },
-  { label: "Investigation", ability: "intelligence" },
-  { label: "Medicine", ability: "wisdom" },
-  { label: "Nature", ability: "intelligence" },
-  { label: "Perception", ability: "wisdom" },
-  { label: "Performance", ability: "charisma" },
-  { label: "Persuasion", ability: "charisma" },
-  { label: "Religion", ability: "intelligence" },
-  { label: "Sleight of Hand", ability: "dexterity" },
-  { label: "Stealth", ability: "dexterity" },
-  { label: "Survival", ability: "wisdom" },
-];
+export const Skills = [...SkillsService.Skills];
 
 export function parseSkillsBlock(yamlString: string): SkillsBlock {
-  const def: SkillsBlock = {
-    proficiencies: [],
-    expertise: [],
-    half_proficiencies: [],
-    bonuses: [],
-  };
-
-  const parsed = parse(yamlString);
-  return Utils.mergeWithDefaults(parsed, def);
+  return skillsService.parseSkillsBlock(yamlString);
 }

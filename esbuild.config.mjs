@@ -14,14 +14,14 @@ const prod = process.argv[2] === "production";
 // Create a separate CSS build context
 const buildCSS = async () => {
     // Create styles directory if it doesn't exist
-    const stylesDir = "lib/styles";
+    const stylesDir = "styles";
     if (!fs.existsSync(stylesDir)) {
         fs.mkdirSync(stylesDir, { recursive: true });
     }
 
     // Build CSS separately
     await esbuild.build({
-        entryPoints: ["lib/styles/index.css"],
+        entryPoints: ["styles/index.css"],
         bundle: true,
         outfile: "dist/styles.css",
         minify: false,
@@ -73,7 +73,7 @@ if (prod) {
     await buildCSS();
 
     // Watch for CSS changes
-    const cssWatcher = fs.watch("lib/styles", { recursive: true }, async (eventType, filename) => {
+    const cssWatcher = fs.watch("styles", { recursive: true }, async (eventType, filename) => {
         if (filename && filename.endsWith(".css")) {
             console.log(`CSS file changed: ${filename}, rebuilding styles.css...`);
             await buildCSS();

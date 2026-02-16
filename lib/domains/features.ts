@@ -1,5 +1,5 @@
 import { Feature } from "@/types/features";
-import * as Utils from "lib/utils/utils";
+import * as Utils from "@/lib/utils/utils";
 import { parse } from "yaml";
 
 export function parseFeatureBlock(yamlString: string): Feature {

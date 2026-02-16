@@ -1,19 +1,19 @@
 import { App, Menu, Plugin, PluginSettingTab, Setting } from "obsidian";
-import { AbilityScoreView } from "lib/views/AbilityScoreView";
+import { AbilityScoreView } from "@/features/abilities/views/AbilityScoreView";
 import { KeyValueStore } from "lib/services/kv/kv";
 import { JsonDataStore } from "./lib/services/kv/local-file-store";
 import { DEFAULT_SETTINGS, TTRPGUIToolkitSettings } from "settings";
 import { msgbus } from "lib/services/event-bus";
 import * as Fm from "lib/domains/frontmatter";
-import { openDiceRoller } from "lib/features/dice/diceRoller";
-import { diceInlinePostProcessor } from "lib/features/dice/dicePostProcessor";
-import { BaseView } from "lib/views/BaseView";
-import { BadgesView, StatsView } from "./lib/views/BadgesView";
-import { SkillsView } from "./lib/views/SkillsView";
-import { VitalsView } from "./lib/views/VitalsView";
-import { InitiativeView } from "./lib/views/InitiativeView";
-import { FeaturesView } from "./lib/views/FeaturesView";
-import { EquipmentView } from "./lib/views/EquipmentView";
+import { openDiceRoller } from "@/features/dice/diceRoller";
+import { diceInlinePostProcessor } from "@/features/dice/dicePostProcessor";
+import { BaseView } from "@/features/shared/BaseView";
+import { BadgesView, StatsView } from "@/features/badges/views/BadgesView";
+import { SkillsView } from "@/features/skills/views/SkillsView";
+import { VitalsView } from "@/features/vitals/views/VitalsView";
+import { InitiativeView } from "@/features/initiative/views/InitiativeView";
+import { FeaturesView } from "@/features/features/views/FeaturesView";
+import { EquipmentView } from "@/features/equipment/views/EquipmentView";
 
 export default class TTRPGUIToolkitPlugin extends Plugin {
   settings: TTRPGUIToolkitSettings;

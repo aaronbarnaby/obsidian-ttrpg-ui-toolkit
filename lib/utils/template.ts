@@ -2,13 +2,13 @@ import * as Handlebars from "handlebars";
 import { App, TFile } from "obsidian";
 import { Frontmatter } from "@/types/core";
 import { DHEquipment } from "@/types/daggerheart/equipment";
-import { FileContext } from "../views/filecontext";
-import { parseAbilityBlockFromDocument, parseAbilityBlock } from "../domains/abilities";
-import * as Fm from "../domains/frontmatter";
-import { getAggregatedModifiersForFile } from "../domains/modifiers";
-import { extractFirstCodeBlock } from "./codeblock-extractor";
+import { FileContext } from "@/features/shared/filecontext";
+import { parseAbilityBlockFromDocument, parseAbilityBlock } from "@/lib/domains/abilities";
+import * as Fm from "@/lib/domains/frontmatter";
+import { getAggregatedModifiersForFile } from "@/lib/domains/modifiers";
+import { extractFirstCodeBlock } from "@/lib/utils/codeblock-extractor";
 import { Feature } from "@/types/features";
-import { parseFeatureBlock } from "../domains/features";
+import { parseFeatureBlock } from "@/lib/domains/features";
 
 export interface TemplateContext {
   frontmatter: Frontmatter;
@@ -225,3 +225,4 @@ export async function loadEquipmentDataForFile(
     features
   };
 }
+

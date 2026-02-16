@@ -18,3 +18,4 @@ export function stripCalloutMarkers(text: string): string {
 
   return result.join("\n");
 }
+

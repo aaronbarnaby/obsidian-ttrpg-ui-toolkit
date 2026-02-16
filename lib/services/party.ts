@@ -1,11 +1,11 @@
 import { App, TFile } from "obsidian";
 import { KeyValueStore } from "./kv/kv";
-import { loadTemplateContextForFile } from "../utils/template";
-import { extractFirstCodeBlock } from "../utils/codeblock-extractor";
+import { loadTemplateContextForFile } from "@/lib/utils/template";
+import { extractFirstCodeBlock } from "@/lib/utils/codeblock-extractor";
 import * as VitalsService from "../domains/vitals";
 import { DHInitiativeBlock } from "@/types/daggerheart/initiative";
 import { DHVitalsBlock, DHVitalsBlockInput, DHVitalsData } from "@/types/daggerheart/vitals";
-import { TemplateContext } from "../utils/template";
+import { TemplateContext } from "@/lib/utils/template";
 
 export type PartyMember = {
   filePath: string;

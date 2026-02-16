@@ -1,9 +1,9 @@
 import { App, TFile } from "obsidian";
 import { Feature, FeatureModifier, AggregatedModifiers } from "@/types/features";
 import { parseFeatureBlock } from "./features";
-import { extractFirstCodeBlock } from "../utils/codeblock-extractor";
-import { loadEquipmentDataForFile } from "../utils/template";
-import { parseYamlSafe } from "../utils/yaml";
+import { extractFirstCodeBlock } from "@/lib/utils/codeblock-extractor";
+import { loadEquipmentDataForFile } from "@/lib/utils/template";
+import { parseYamlSafe } from "@/lib/utils/yaml";
 
 const DEFAULT_AGGREGATED: AggregatedModifiers = {
   ability: {},

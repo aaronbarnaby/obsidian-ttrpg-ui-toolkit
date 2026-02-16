@@ -38,3 +38,4 @@ export function extractFirstCodeBlock(text: string, blockType: string): string |
   const blocks = extractCodeBlocks(text, blockType);
   return blocks.length > 0 ? blocks[0] : null;
 }
+

@@ -1,4 +1,4 @@
-import * as Utils from "lib/utils/utils";
+import * as Utils from "@/lib/utils/utils";
 import { EventButtonsBlock, EventButtonItem } from "types/core";
 import { parse } from "yaml";
 
