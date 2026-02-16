@@ -140,7 +140,6 @@ export async function getAggregatedModifiersForFile(
       console.error("Error parsing equipment block for modifiers:", filePath, err);
     }
   }
-  console.log('modifiers', { featureContent, equipmentContent, result });
 
   return result;
 }

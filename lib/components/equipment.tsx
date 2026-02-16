@@ -2,10 +2,15 @@ import * as React from "react";
 import { DHEquipmentWithPath } from "../utils/equipment";
 import { FeaturesBlock } from "./features";
 
+export type EquipmentBlockStyles = {
+  hideWrapper?: boolean;
+}
+
 export type EquipmentBlockProps = {
   type: "daggerheart" | "dnd";
   items: DHEquipmentWithPath[];
   diceResultDuration: number;
+  styles?: EquipmentBlockStyles;
   onOpenFile?: (path: string) => void;
 };
 
@@ -22,12 +27,13 @@ function DnDPlaceholder() {
 
 /* ── Damage badge (renders as code so dice post processor can attach roller) ── */
 
-function DamageBadge({ damage }: { damage: string }) {
+function DamageBadge({ damage, type }: { damage: string, type: string }) {
   if (!damage) return null;
   return (
     <span className="equipment-badge equipment-badge--damage">
       <span className="equipment-badge-label">Damage:</span>
       <code className="equipment-dice-expr">{`dice: ${damage}`}</code>
+      <span className="equipment-badge-extra-value">{type}</span>
     </span>
   );
 }
@@ -84,12 +90,9 @@ function DaggerheartItemCard({
       </div>
       <div className="equipment-item-badges">
         <DataBadge label="Range" value={item.range} />
-        <DamageBadge damage={item.damage} />
+        <DamageBadge damage={item.damage} type={item.damage_type} />
         <DataBadge label="Type" value={item.type} />
         <DataBadge label="Burden" value={item.burden} />
-        {item.damage_type ? (
-          <DataBadge label="" value={item.damage_type} />
-        ) : null}
       </div>
       {hasFeatures && item.features && (
         <div className="equipment-item-features">
@@ -104,23 +107,33 @@ function DaggerheartItemCard({
 
 function DaggerheartEquipmentBlock({
   items,
+  styles,
   onOpenFile,
 }: {
   items: DHEquipmentWithPath[];
+  styles?: EquipmentBlockStyles;
   onOpenFile?: (path: string) => void;
 }) {
+  const renderItems = () => (
+    <div className="equipment-items">
+      {items.map((item, i) => (
+        <DaggerheartItemCard
+          item={item}
+          onOpenFile={onOpenFile}
+          key={i}
+        />
+      ))}
+    </div>
+  );
+
+  if (styles?.hideWrapper) {
+    return renderItems();
+  }
+
   return (
     <div className="equipment-block equipment-block--daggerheart">
       <span className="equipment-block-title">Equipment</span>
-      <div className="equipment-items">
-        {items.map((item, i) => (
-          <DaggerheartItemCard
-            item={item}
-            onOpenFile={onOpenFile}
-            key={i}
-          />
-        ))}
-      </div>
+      {renderItems()}
     </div>
   );
 }
@@ -130,12 +143,13 @@ function DaggerheartEquipmentBlock({
 export function EquipmentBlock({
   type,
   items,
+  styles,
   onOpenFile,
 }: EquipmentBlockProps) {
   if (type === "dnd") {
     return <DnDPlaceholder />;
   }
   return (
-    <DaggerheartEquipmentBlock items={items} onOpenFile={onOpenFile} />
+    <DaggerheartEquipmentBlock items={items} styles={styles} onOpenFile={onOpenFile} />
   );
 }

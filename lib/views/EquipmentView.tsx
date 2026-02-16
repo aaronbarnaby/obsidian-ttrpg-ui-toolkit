@@ -4,7 +4,7 @@ import { ReactMarkdown } from "./ReactMarkdown";
 import { parseYamlSafe } from "../utils/yaml";
 import { useFileContext } from "./filecontext";
 import { resolveEquipmentList } from "../utils/equipment";
-import { EquipmentBlock } from "../components/equipment";
+import { EquipmentBlock, EquipmentBlockStyles } from "../components/equipment";
 import { diceInlinePostProcessor } from "../features/dice/dicePostProcessor";
 import * as ReactDOM from "react-dom/client";
 import { flushSync } from "react-dom";
@@ -14,6 +14,7 @@ import { DHEquipmentWithPath } from "../utils/equipment";
 export type EquipmentBlockYaml = {
   type?: "daggerheart" | "dnd";
   items?: unknown[];
+  styles?: EquipmentBlockStyles
 };
 
 type PluginLike = { settings: { diceResultDuration: number } };
@@ -96,16 +97,16 @@ class EquipmentComponent extends ReactMarkdown {
         equipped
       );
       this.blockType = blockType;
-      this.renderContent();
+      this.renderContent(doc.styles);
     } catch (e) {
       console.error("Equipment block error", e);
       this.resolvedItems = [];
       this.blockType = "daggerheart";
-      this.renderContent();
+      this.renderContent({ hideWrapper: false });
     }
   }
 
-  private renderContent() {
+  private renderContent(styles: EquipmentBlockStyles | undefined) {
     if (!this.reactRoot) {
       this.reactRoot = ReactDOM.createRoot(this.containerEl);
     }
@@ -115,6 +116,7 @@ class EquipmentComponent extends ReactMarkdown {
           type: this.blockType,
           items: this.resolvedItems,
           diceResultDuration: this.diceResultDuration,
+          styles,
           onOpenFile: (path: string) => {
             const file = this.app.vault.getFileByPath(path);
             if (file) {

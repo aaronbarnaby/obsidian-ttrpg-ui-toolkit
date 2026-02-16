@@ -31,7 +31,7 @@
 .equipment-item {
   border: 1px solid var(--encounter-border, #505050);
   border-radius: var(--ttrpg-ui-toolkit-corner, 10px);
-  background-color: var(--encounter-bg-row, #3a3a3a);
+  background-color: var(--encounter-bg-row, #1e1e1e);
   padding: 0.6rem 0.85rem 0.85rem;
   display: flex;
   flex-direction: column;

@@ -4,6 +4,7 @@ import {
   PassiveFeature,
   ActionFeature,
   FeatureCost,
+  FeaturesBlockStyles,
 } from "../../types/features";
 
 /**
@@ -49,27 +50,29 @@ function CostDisplay({ costs }: { costs: FeatureCost[] }) {
 
 /* ── Individual feature items ── */
 
-function PassiveItem({ feature }: { feature: PassiveFeature }) {
+function PassiveItem({ feature, showBadge = false }: { feature: PassiveFeature, showBadge?: boolean }) {
   return (
     <div className='feature-item'>
       <div className="feature-item-body">
         <span className="feature-item-name">{feature.name}</span>
         <span className="feature-item-description">{feature.description}</span>
       </div>
+      {showBadge && <div className="feature-item-badge">Passive</div>}
     </div>
   );
 }
 
-function ActionItem({ feature }: { feature: ActionFeature }) {
+function ActionItem({ feature, showBadge = false }: { feature: ActionFeature, showBadge?: boolean }) {
   const hasCost = Array.isArray(feature.cost) && feature.cost.length > 0;
 
   return (
     <div className={`feature-item${hasCost ? " has-cost" : ""}`}>
+      {hasCost && <CostDisplay costs={feature.cost!} />}
       <div className="feature-item-body">
         <span className="feature-item-name">{feature.name}</span>
         <span className="feature-item-description">{feature.description}</span>
       </div>
-      {hasCost && <CostDisplay costs={feature.cost!} />}
+      {showBadge && <div className="feature-item-badge">Action</div>}
     </div>
   );
 }
@@ -79,10 +82,20 @@ function ActionItem({ feature }: { feature: ActionFeature }) {
 function FeatureSection({
   title,
   children,
+  styles
 }: {
   title: string;
   children: React.ReactNode;
+  styles?: FeaturesBlockStyles;
 }) {
+  if (styles?.hideWrappers) {
+    return (
+      <div className="feature-section-items">
+        {children}
+      </div>
+    );
+  }
+
   return (
     <div className="feature-section">
       <span className="feature-section-title">{title}</span>
@@ -100,16 +113,16 @@ export function FeaturesBlock({ data }: { data: Feature }) {
   return (
     <div className="features-block">
       {hasPassives && (
-        <FeatureSection title="Passives">
+        <FeatureSection title="Passives" styles={data.styles}>
           {data.passives.map((p, i) => (
-            <PassiveItem feature={p} key={i} />
+            <PassiveItem feature={p} key={i} showBadge={data.styles?.hideWrappers} />
           ))}
         </FeatureSection>
       )}
       {hasActions && (
-        <FeatureSection title="Actions">
+        <FeatureSection title="Actions" styles={data.styles}>
           {data.actions.map((a, i) => (
-            <ActionItem feature={a} key={i} />
+            <ActionItem feature={a} key={i} showBadge={data.styles?.hideWrappers} />
           ))}
         </FeatureSection>
       )}

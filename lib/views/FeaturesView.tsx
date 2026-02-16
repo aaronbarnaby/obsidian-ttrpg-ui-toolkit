@@ -35,6 +35,7 @@ class FeaturesComponent extends ReactMarkdown {
       const data: Feature = {
         passives: Array.isArray(doc.passives) ? doc.passives : [],
         actions: Array.isArray(doc.actions) ? doc.actions : [],
+        styles: doc.styles,
       };
 
       if (!this.reactRoot) {

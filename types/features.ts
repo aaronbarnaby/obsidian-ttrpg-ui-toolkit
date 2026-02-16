@@ -1,7 +1,13 @@
 export type Feature = {
   passives: PassiveFeature[];
   actions: ActionFeature[];
+
+  styles?: FeaturesBlockStyles;
 };
+
+export type FeaturesBlockStyles = {
+  hideWrappers?: boolean;
+}
 
 export type PassiveFeature = {
   name: string;
