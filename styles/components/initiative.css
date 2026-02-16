@@ -3,16 +3,9 @@
  */
 
 .encounter-tracker {
-  --encounter-bg: #2a2a2a;
-  --encounter-bg-section: #333333;
-  --encounter-bg-row: #3a3a3a;
-  --encounter-border: #505050;
-  --encounter-text: #e0e0e0;
-  --encounter-text-muted: #a0a0a0;
-
-  border: 1px solid var(--encounter-border);
+  border: 1px solid var(--ttrpg-ui-color-border-primary);
   border-radius: var(--ttrpg-ui-toolkit-corner);
-  background-color: var(--encounter-bg);
+  background-color: var(--ttrpg-ui-color-bg-secondary);
   padding: 0;
   display: flex;
   flex-direction: column;
@@ -29,7 +22,7 @@
   border: none;
   border-radius: var(--ttrpg-ui-toolkit-corner);
   background: transparent;
-  color: var(--encounter-text);
+  color: var(--ttrpg-ui-color-text-primary);
   cursor: pointer;
   font: inherit;
 }
@@ -39,7 +32,7 @@
 }
 
 .encounter-label {
-  color: var(--encounter-text-muted);
+  color: var(--ttrpg-ui-color-text-secondary);
   font-size: 0.95rem;
   white-space: nowrap;
 }
@@ -47,13 +40,13 @@
 .encounter-name {
   flex: 1;
   font-size: 1.2rem;
-  color: var(--encounter-text);
+  color: var(--ttrpg-ui-color-text-primary);
 }
 
 .encounter-toggle {
   flex-shrink: 0;
   font-size: 1.2rem;
-  color: var(--encounter-text-muted);
+  color: var(--ttrpg-ui-color-text-secondary);
 }
 
 .encounter-header-collapsed .encounter-toggle {
@@ -61,9 +54,9 @@
 }
 
 .initiative-section {
-  border-top: 1px solid var(--encounter-border);
+  border-top: 1px solid var(--ttrpg-ui-color-border-primary);
   border-radius: 0;
-  background-color: var(--encounter-bg-section);
+  background-color: var(--ttrpg-ui-color-bg-tertiary);
   padding: 0.75rem 1rem 1rem;
   display: flex;
   flex-direction: column;
@@ -71,18 +64,18 @@
 }
 
 .initiative-section-title {
-  color: var(--encounter-text);
+  color: var(--ttrpg-ui-color-text-primary);
   font-size: 1rem;
   font-weight: 700;
 }
 
 .initiative-row {
   position: relative;
-  border: 1px solid var(--encounter-border);
+  border: 1px solid var(--ttrpg-ui-color-border-primary);
   border-radius: 6px;
   padding: 0.5rem 0.75rem;
   padding-top: 1rem;
-  background-color: var(--encounter-bg-row);
+  background-color: var(--ttrpg-ui-color-bg-hover);
   display: flex;
   flex-direction: column;
   gap: 0.5rem;
@@ -100,9 +93,9 @@
   left: 0.6rem;
   padding: 0.3rem 0.5rem;
   font-size: 0.8rem;
-  color: var(--encounter-text);
-  background-color: var(--encounter-bg-row);
-  border: 1px solid var(--encounter-border);
+  color: var(--ttrpg-ui-color-text-primary);
+  background-color: var(--ttrpg-ui-color-bg-hover);
+  border: 1px solid var(--ttrpg-ui-color-border-primary);
   border-bottom: none;
   border-radius: 4px 4px 0 0;
   white-space: nowrap;
@@ -142,27 +135,27 @@
 }
 
 .encounter-tracker .vital-boxes {
-  background-color: var(--encounter-bg);
+  background-color: var(--ttrpg-ui-color-bg-secondary);
 }
 
 .encounter-tracker .vital-box {
-  border-color: var(--encounter-border);
+  border-color: var(--ttrpg-ui-color-border-primary);
 }
 
 .encounter-tracker .vital-box.active {
-  background-color: var(--encounter-text-muted);
-  border-color: var(--encounter-text-muted);
+  background-color: var(--ttrpg-ui-color-text-secondary);
+  border-color: var(--ttrpg-ui-color-text-secondary);
 }
 
 .encounter-tracker .vital-label {
-  color: var(--encounter-text-muted);
+  color: var(--ttrpg-ui-color-text-secondary);
 }
 
 .initiative-expand-trigger {
   flex-shrink: 0;
   padding: 0.25rem 0.5rem;
   font-size: 0.8rem;
-  color: var(--encounter-text-muted);
+  color: var(--ttrpg-ui-color-text-secondary);
   background: transparent;
   border: none;
   cursor: pointer;
@@ -170,15 +163,15 @@
 }
 
 .initiative-expand-trigger:hover {
-  color: var(--encounter-text);
+  color: var(--ttrpg-ui-color-text-primary);
   background-color: rgba(255, 255, 255, 0.08);
 }
 
 .initiative-row-extra {
   padding: 0.5rem 0.75rem;
   font-size: 0.85rem;
-  color: var(--encounter-text-muted);
-  border-top: 1px solid var(--encounter-border);
+  color: var(--ttrpg-ui-color-text-secondary);
+  border-top: 1px solid var(--ttrpg-ui-color-border-primary);
   margin-top: 0.25rem;
 }
 
@@ -202,7 +195,7 @@
   margin-top: 0.5rem;
   padding: 0.3rem 1rem;
   font-size: 0.8rem;
-  color: var(--encounter-text-muted);
+  color: var(--ttrpg-ui-color-text-secondary);
   background: none;
   border: none;
   cursor: pointer;
@@ -211,13 +204,13 @@
 }
 
 .initiative-open-party-file:hover {
-  color: var(--encounter-text);
+  color: var(--ttrpg-ui-color-text-primary);
   text-decoration: underline;
 }
 
 .initiative-row-empty .initiative-row-name-label {
   font-style: italic;
-  color: var(--encounter-text-muted);
+  color: var(--ttrpg-ui-color-text-secondary);
 }
 
 .initiative-row-empty .initiative-row-main {
@@ -234,7 +227,7 @@
 .fear-label {
   font-size: 1.3rem;
   font-weight: 700;
-  color: var(--encounter-text-muted);
+  color: var(--ttrpg-ui-color-text-secondary);
   text-transform: uppercase;
   letter-spacing: 0.5px;
   white-space: nowrap;
@@ -246,7 +239,7 @@
   flex-wrap: wrap;
   gap: 0.3rem;
   align-items: center;
-  background-color: var(--encounter-bg);
+  background-color: var(--ttrpg-ui-color-bg-secondary);
   padding: 0.8rem 1rem;
   border-radius: 12px;
 }
@@ -255,7 +248,7 @@
   width: 44px;
   height: 44px;
   border-radius: 3px;
-  border: 1.5px solid var(--encounter-border);
+  border: 1.5px solid var(--ttrpg-ui-color-border-primary);
   cursor: pointer;
   padding: 0;
   transition:
@@ -264,10 +257,10 @@
 }
 
 .fear-box:hover {
-  border-color: var(--color-text-secondary, #cccccc);
+  border-color: var(--ttrpg-ui-color-text-secondary, #cccccc);
 }
 
 .fear-box.active {
-  background-color: var(--encounter-text-muted);
-  border-color: var(--encounter-text-muted);
+  background-color: var(--ttrpg-ui-color-text-secondary);
+  border-color: var(--ttrpg-ui-color-text-secondary);
 }

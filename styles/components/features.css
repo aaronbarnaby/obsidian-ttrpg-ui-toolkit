@@ -11,9 +11,9 @@
 /* ── Section (Passives / Actions) ── */
 
 .feature-section {
-  border: 1px solid var(--encounter-border, #505050);
-  border-radius: var(--ttrpg-ui-toolkit-corner, 10px);
-  background-color: var(--encounter-bg, #2a2a2a);
+  border: 1px solid var(--ttrpg-ui-color-border-primary);
+  border-radius: var(--ttrpg-ui-toolkit-corner);
+  background-color: var(--ttrpg-ui-color-bg-secondary);
   padding: 0.5rem 0.75rem 0.75rem;
   display: flex;
   flex-direction: column;
@@ -23,7 +23,7 @@
 .feature-section-title {
   font-size: 0.95rem;
   font-weight: 400;
-  color: var(--encounter-text-muted, #a0a0a0);
+  color: var(--ttrpg-ui-color-text-secondary);
 }
 
 /* ── Items container ── */
@@ -40,9 +40,9 @@
   position: relative;
   display: flex;
   align-items: stretch;
-  border: 1px solid var(--encounter-border, #505050);
+  border: 1px solid var(--ttrpg-ui-color-border-primary);
   border-radius: 6px;
-  background-color: var(--encounter-bg-row, #1e1e1e);
+  background-color: var(--ttrpg-ui-color-bg-primary);
   overflow: hidden;
 }
 
@@ -59,12 +59,12 @@
   font-size: 1.1rem;
   font-weight: 700;
   font-style: italic;
-  color: var(--encounter-text, #e0e0e0);
+  color: var(--ttrpg-ui-color-text-primary);
 }
 
 .feature-item-description {
   font-size: 0.85rem;
-  color: var(--encounter-text-muted, #a0a0a0);
+  color: var(--ttrpg-ui-color-text-secondary);
   line-height: 1.35;
 }
 
@@ -77,7 +77,7 @@ button.feature-cost-area,
   all: unset;
   box-sizing: border-box;
 
-  border-right: 1px solid var(--encounter-border, #505050);
+  border-right: 1px solid var(--ttrpg-ui-color-border-primary);
   background-color: #2f2e2e;
 
   /* Layout */
@@ -92,7 +92,7 @@ button.feature-cost-area,
   min-width: 200px;
 
   /* Text */
-  color: var(--encounter-text, #e0e0e0);
+  color: var(--ttrpg-ui-color-text-primary);
   font: inherit;
   cursor: pointer;
   transition: background-color 0.15s ease;
@@ -110,7 +110,7 @@ button.feature-cost-area:active,
 
 button.feature-cost-area:focus-visible,
 .feature-cost-area:focus-visible {
-  outline: 1px solid var(--color-border-active, #6d7cba);
+  outline: 1px solid var(--ttrpg-ui-color-border-active, #6d7cba);
   outline-offset: -1px;
 }
 

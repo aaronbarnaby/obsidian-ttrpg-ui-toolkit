@@ -1,12 +1,12 @@
 /*
  * Equipment block (Daggerheart sketch style)
- * Reuses --encounter-* and --ttrpg-ui-toolkit-corner from features.
+ * Uses generic --ttrpg-ui-color-* theme variables and --ttrpg-ui-toolkit-corner.
  */
 
 .equipment-block {
-  border: 1px solid var(--encounter-border, #505050);
-  border-radius: var(--ttrpg-ui-toolkit-corner, 10px);
-  background-color: var(--encounter-bg, #2a2a2a);
+  border: 1px solid var(--ttrpg-ui-color-border-primary);
+  border-radius: var(--ttrpg-ui-toolkit-corner);
+  background-color: var(--ttrpg-ui-color-bg-secondary);
   padding: 0.75rem 1rem 1rem;
   display: flex;
   flex-direction: column;
@@ -16,7 +16,7 @@
 .equipment-block-title {
   font-size: 1rem;
   font-weight: 600;
-  color: var(--encounter-text-muted, #a0a0a0);
+  color: var(--ttrpg-ui-color-text-secondary);
   margin-bottom: 0.25rem;
 }
 
@@ -29,9 +29,9 @@
 /* ── Single item card ── */
 
 .equipment-item {
-  border: 1px solid var(--encounter-border, #505050);
-  border-radius: var(--ttrpg-ui-toolkit-corner, 10px);
-  background-color: var(--encounter-bg-row, #1e1e1e);
+  border: 1px solid var(--ttrpg-ui-color-border-primary);
+  border-radius: var(--ttrpg-ui-toolkit-corner);
+  background-color: var(--ttrpg-ui-color-bg-primary);
   padding: 0.6rem 0.85rem 0.85rem;
   display: flex;
   flex-direction: column;
@@ -48,7 +48,7 @@
 .equipment-item-name {
   font-size: 1.25rem;
   font-weight: 700;
-  color: var(--encounter-text, #e0e0e0);
+  color: var(--ttrpg-ui-color-text-primary);
 }
 
 /* Reset button appearance so it matches .equipment-item-name text */
@@ -73,14 +73,14 @@ button.equipment-item-name--link:hover,
 
 button.equipment-item-name--link:focus-visible,
 .equipment-item-name--link:focus-visible {
-  outline: 1px solid var(--color-border-active, #6d7cba);
+  outline: 1px solid var(--ttrpg-ui-color-border-active, #6d7cba);
   outline-offset: 2px;
 }
 
 .equipment-item-tier {
   font-size: 0.95rem;
   font-weight: 400;
-  color: var(--encounter-text-muted, #a0a0a0);
+  color: var(--ttrpg-ui-color-text-secondary);
 }
 
 /* ── Badges row ── */
@@ -98,17 +98,17 @@ button.equipment-item-name--link:focus-visible,
   gap: 0.25rem;
   padding: 0.2rem 0.5rem;
   border-radius: 6px;
-  border: 1px solid var(--encounter-border, #505050);
-  background-color: var(--encounter-bg, #2a2a2a);
+  border: 1px solid var(--ttrpg-ui-color-border-primary);
+  background-color: var(--ttrpg-ui-color-bg-secondary);
   font-size: 0.85rem;
 }
 
 .equipment-badge-label {
-  color: var(--encounter-text-muted, #a0a0a0);
+  color: var(--ttrpg-ui-color-text-secondary);
 }
 
 .equipment-badge-value {
-  color: var(--encounter-text, #e0e0e0);
+  color: var(--ttrpg-ui-color-text-primary);
 }
 
 /* Damage badge: code is replaced by dice widget; don't override widget cursor */
@@ -139,6 +139,6 @@ button.equipment-item-name--link:focus-visible,
 
 .equipment-block--dnd .equipment-placeholder {
   font-size: 0.9rem;
-  color: var(--encounter-text-muted, #a0a0a0);
+  color: var(--ttrpg-ui-color-text-secondary);
   margin: 0;
 }

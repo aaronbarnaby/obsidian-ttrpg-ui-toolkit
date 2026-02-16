@@ -17,7 +17,7 @@
 }
 
 .damage-segment {
-  background-color: var(--color-bg-secondary, #4a4a4a);
+  background-color: var(--ttrpg-ui-color-bg-secondary, #4a4a4a);
   border: none;
   border-radius: 0.4rem;
   padding: 2rem 0.8rem;
@@ -39,7 +39,7 @@
 .damage-label {
   font-size: 0.75rem;
   font-weight: 700;
-  color: var(--color-text-primary, #ffffff);
+  color: var(--ttrpg-ui-color-text-primary, #ffffff);
   text-transform: uppercase;
   letter-spacing: 0.5px;
   margin-bottom: 0.2rem;
@@ -47,7 +47,7 @@
 
 .damage-subtitle {
   font-size: 0.65rem;
-  color: var(--color-text-secondary, #cccccc);
+  color: var(--ttrpg-ui-color-text-secondary, #cccccc);
 }
 
 .damage-threshold {
@@ -56,7 +56,7 @@
   display: flex;
   align-items: center;
   justify-content: center;
-  background-color: var(--color-bg-secondary, #4a4a4a);
+  background-color: var(--ttrpg-ui-color-bg-secondary, #4a4a4a);
   border: 1px solid #ffffff;
   padding: 0.5rem 1rem;
   min-width: 2rem;
@@ -76,12 +76,12 @@
 .damage-threshold-number {
   font-size: 1.5rem;
   font-weight: 700;
-  color: var(--color-text-primary, #ffffff);
+  color: var(--ttrpg-ui-color-text-primary, #ffffff);
 }
 
 /* Stat Displays (Evasion and Armor) */
 .evasion-number {
-  color: var(--color-text-primary, #ffffff);
+  color: var(--ttrpg-ui-color-text-primary, #ffffff);
   font-size: 2rem;
   font-weight: 700;
   text-transform: uppercase;
@@ -89,7 +89,7 @@
 
 /* Armor Blocks Grid */
 .armor-number {
-  color: var(--color-text-primary, #ffffff);
+  color: var(--ttrpg-ui-color-text-primary, #ffffff);
   font-size: 2rem;
   font-weight: 700;
   text-transform: uppercase;
@@ -102,7 +102,7 @@
   align-items: center;
   margin-left: 0.5rem;
   padding-left: 1rem;
-  border-left: 1px solid var(--color-text-primary, #ffffff);
+  border-left: 1px solid var(--ttrpg-ui-color-text-primary, #ffffff);
 }
 
 /* Vital Box Rows (HP and Stress) */
@@ -115,7 +115,7 @@
 .vital-label {
   font-size: 0.9rem;
   font-weight: 700;
-  color: var(--color-text-primary, #333333);
+  color: var(--ttrpg-ui-color-text-primary, #333333);
   text-transform: uppercase;
   letter-spacing: 0.5px;
   white-space: nowrap;
@@ -127,7 +127,7 @@
   flex-wrap: wrap;
   gap: 0.3rem;
   align-items: center;
-  background-color: var(--color-bg-secondary, #4a4a4a);
+  background-color: var(--ttrpg-ui-color-bg-secondary, #4a4a4a);
   padding: 0.8rem 1rem;
   border-radius: 12px;
 }
@@ -148,7 +148,7 @@
   width: 22px;
   height: 22px;
   border-radius: 3px;
-  border: 1.5px solid var(--color-text-primary, #ffffff);
+  border: 1.5px solid var(--ttrpg-ui-color-text-primary, #ffffff);
   cursor: pointer;
   padding: 0;
   transition:
@@ -157,17 +157,17 @@
 }
 
 .vital-box:hover {
-  border-color: var(--color-text-secondary, #cccccc);
+  border-color: var(--ttrpg-ui-color-text-secondary, #cccccc);
 }
 
 .vital-box.active {
-  background-color: var(--color-text-primary, #ffffff);
-  border-color: var(--color-text-primary, #ffffff);
+  background-color: var(--ttrpg-ui-color-text-primary, #ffffff);
+  border-color: var(--ttrpg-ui-color-text-primary, #ffffff);
 }
 
 .vital-box.filled {
-  background-color: var(--color-bg-primary, #ffffff);
-  border-color: var(--color-border-primary, #333333);
+  background-color: var(--ttrpg-ui-color-bg-primary, #ffffff);
+  border-color: var(--ttrpg-ui-color-border-primary, #333333);
 }
 
 .vital-box-row-container {
@@ -187,7 +187,7 @@
   display: flex;
   align-items: center;
   justify-content: center;
-  background-color: var(--color-bg-secondary, #4a4a4a);
+  background-color: var(--ttrpg-ui-color-bg-secondary, #4a4a4a);
   padding: 0.8rem 1rem;
   border-radius: 999px;
   max-width: 300px;
@@ -199,7 +199,7 @@
   width: 20px;
   height: 20px;
   background-color: transparent;
-  border: 1.5px solid var(--color-text-primary, #ffffff);
+  border: 1.5px solid var(--ttrpg-ui-color-text-primary, #ffffff);
   transform: rotate(45deg);
   cursor: pointer;
   padding: 0;
@@ -209,18 +209,18 @@
 }
 
 .hope-diamond:hover {
-  border-color: var(--color-text-secondary, #cccccc);
+  border-color: var(--ttrpg-ui-color-text-secondary, #cccccc);
 }
 
 .hope-diamond.active {
-  background-color: var(--color-text-primary, #ffffff);
-  border-color: var(--color-text-primary, #ffffff);
+  background-color: var(--ttrpg-ui-color-text-primary, #ffffff);
+  border-color: var(--ttrpg-ui-color-text-primary, #ffffff);
 }
 
 .hope-divider {
   width: 1px;
   height: 24px;
-  background-color: var(--color-text-primary, #ffffff);
+  background-color: var(--ttrpg-ui-color-text-primary, #ffffff);
   margin: 0 0.5rem;
 }
 
@@ -239,8 +239,8 @@
 }
 
 .dnd-section-box {
-  background-color: var(--color-bg-secondary, #f5f5f5);
-  border: 1px solid var(--color-border-primary, #e0e0e0);
+  background-color: var(--ttrpg-ui-color-bg-secondary, #f5f5f5);
+  border: 1px solid var(--ttrpg-ui-color-border-primary, #e0e0e0);
   border-radius: 12px;
   padding: 1rem;
   min-width: 0;
@@ -280,7 +280,7 @@
   flex-direction: column;
   gap: 0.4rem;
   align-items: center;
-  border-top: 1px solid var(--color-border-focus, rgba(109, 124, 186, 0.5));
+  border-top: 1px solid var(--ttrpg-ui-color-border-focus, rgba(109, 124, 186, 0.5));
   padding-top: 0.5rem;
 }
 
@@ -292,7 +292,7 @@
 .dnd-hit-dice-value {
   font-size: 1.75rem;
   font-weight: 700;
-  color: var(--color-text-primary, #333333);
+  color: var(--ttrpg-ui-color-text-primary, #333333);
 }
 
 .dnd-hp-section {
@@ -306,7 +306,7 @@
   flex-direction: column;
   gap: 0rem;
   align-items: center;
-  border-top: 1px solid var(--color-border-focus, rgba(109, 124, 186, 0.5));
+  border-top: 1px solid var(--ttrpg-ui-color-border-focus, rgba(109, 124, 186, 0.5));
   padding-top: 0.5rem;
 }
 
@@ -318,7 +318,7 @@
 .dnd-hp-value {
   font-size: 2.5rem;
   font-weight: 700;
-  color: var(--color-text-primary, #333333);
+  color: var(--ttrpg-ui-color-text-primary, #333333);
 }
 
 .dnd-death-saves-section {
@@ -346,13 +346,13 @@
 }
 
 .vital-box.death-save-success.active {
-  background-color: var(--color-death-save-success, #2d5016);
-  border-color: var(--color-death-save-success, #2d5016);
+  background-color: var(--ttrpg-ui-color-death-save-success, #2d5016);
+  border-color: var(--ttrpg-ui-color-death-save-success, #2d5016);
 }
 
 .vital-box.death-save-failure.active {
-  background-color: var(--color-death-save-failure, #8b2020);
-  border-color: var(--color-death-save-failure, #8b2020);
+  background-color: var(--ttrpg-ui-color-death-save-failure, #8b2020);
+  border-color: var(--ttrpg-ui-color-death-save-failure, #8b2020);
 }
 
 .dnd-actions-panel {
@@ -367,7 +367,7 @@
   max-width: 4rem;
   padding: 0.4rem 0.5rem;
   border-radius: 0.4rem;
-  border: 1px solid var(--color-text-primary, #333333);
+  border: 1px solid var(--ttrpg-ui-color-text-primary, #333333);
   font-size: 1rem;
   text-align: center;
   box-sizing: border-box;
@@ -390,16 +390,16 @@
 }
 
 .dnd-action-heal {
-  border-color: var(--color-action-heal, #2d5016);
-  color: var(--color-action-heal, #2d5016);
+  border-color: var(--ttrpg-ui-color-action-heal, #2d5016);
+  color: var(--ttrpg-ui-color-action-heal, #2d5016);
 }
 
 .dnd-action-damage {
-  border-color: var(--color-action-damage, #8b2020);
-  color: var(--color-action-damage, #8b2020);
+  border-color: var(--ttrpg-ui-color-action-damage, #8b2020);
+  color: var(--ttrpg-ui-color-action-damage, #8b2020);
 }
 
 .dnd-action-temp {
-  border-color: var(--color-action-temp, #5c2d8b);
-  color: var(--color-action-temp, #5c2d8b);
+  border-color: var(--ttrpg-ui-color-action-temp, #5c2d8b);
+  color: var(--ttrpg-ui-color-action-temp, #5c2d8b);
 }

@@ -22,19 +22,19 @@
   align-items: center;
   gap: 0.3rem;
   padding: 0.25rem 0.5rem;
-  background-color: var(--color-bg-secondary);
-  border-radius: 0.25rem;
-  border: 1px solid var(--color-border-primary);
+  background-color: var(--ttrpg-ui-color-bg-secondary);
+  border-radius: 6px;
+  border: 1px solid var(--ttrpg-ui-color-border-primary);
   font-size: 0.8rem;
 }
 
 .badge-label {
   text-transform: uppercase;
   letter-spacing: 1px;
-  color: var(--color-text-secondary);
+  color: var(--ttrpg-ui-color-text-secondary);
 }
 
 .badge-value {
   font-weight: bold;
-  color: var(--color-text-bright);
+  color: var(--ttrpg-ui-color-text-bright);
 }

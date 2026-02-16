@@ -1,34 +1,13 @@
-:root{
+/*
+ * Ability score cards – uses generic --ttrpg-ui-color-* theme variables from common.css
+ */
+:root {
   --tile-w: 120px;
   --tile-h: 136px;
-
-  --panel-0: #202735;
-  --panel-1: #2a3243;
-  --border: rgba(180, 190, 210, .28);
-  --divider: rgba(200, 210, 230, .22);
-
-  --accent: #7fb2ff;
-  --text: rgba(255,255,255,.9);
-  --muted: rgba(210,220,240,.75);
-  --saving: #7fd6e6;
-
-  /* selected */
-  --sel-panel-0:#1e2e46;
-  --sel-panel-1:#2c4570;
-  --sel-border:#6fa3ff;
-  --sel-divider: rgba(140,180,255,.55);
-  --sel-accent:#9fc3ff;
-  --sel-glow: rgba(110,165,255,.55);
 }
 
-.dnd {
-  --tile-h: 136px;
-  --accent: #7fb2ff;
-}
-
-.daggerheart {
+.daggerheart.ability-scores-container {
   --tile-h: 180px;
-  --accent: #ffef9e;
 }
 
 .ability-scores-grid {
@@ -44,27 +23,26 @@
 .ability-tile {
   width: var(--tile-w);
   height: var(--tile-h);
-  border-radius: 8px;
+  border-radius: var(--ttrpg-ui-toolkit-corner);
   position: relative;
   overflow: hidden;
   background:
     radial-gradient(120% 110% at 90% 10%, rgba(255,255,255,.08) 0%, transparent 55%),
-    linear-gradient(180deg, var(--panel-1) 0%, var(--panel-0) 36%, #1c2330 100%);
-  border: 1px solid var(--border);
+    linear-gradient(180deg, var(--ttrpg-ui-color-bg-secondary) 0%, var(--ttrpg-ui-color-bg-primary) 36%, var(--ttrpg-ui-color-bg-darker) 100%);
+  border: 1px solid var(--ttrpg-ui-color-border-primary);
   box-shadow:
     0 14px 24px rgba(0,0,0,.45),
     inset 0 1px 0 rgba(255,255,255,.06);
 }
 
-.ability-tile.proficient{
+.ability-tile.proficient {
   background:
     radial-gradient(120% 110% at 90% 10%, rgba(255,255,255,.12) 0%, transparent 55%),
-    linear-gradient(180deg,var(--sel-panel-1) 0%,var(--sel-panel-0) 40%,#16253d 100%);
-  border-color: var(--sel-border);
+    linear-gradient(180deg, var(--ttrpg-ui-color-bg-tertiary) 0%, var(--ttrpg-ui-color-bg-hover) 40%, var(--ttrpg-ui-color-bg-darker) 100%);
+  border-color: var(--ttrpg-ui-color-border-active);
   box-shadow:
-    0 0 0 2px rgba(120,170,255,.25),
+    0 0 0 2px var(--ttrpg-ui-color-border-focus),
     0 18px 32px rgba(0,0,0,.55),
-    0 0 18px var(--sel-glow),
     inset 0 1px 0 rgba(255,255,255,.12);
 }
 
@@ -77,7 +55,7 @@
   letter-spacing: .8px;
   text-transform: uppercase;
   font-size: 12px;
-  color: var(--accent);
+  color: var(--ttrpg-ui-color-text-secondary);
 }
 
 .ability-tile .ability-tile-header p {
@@ -90,7 +68,7 @@
 }
 
 .ability-tile .ability-tile-header .ability-tile-score {
-  color: rgba(215,225,245,.85);
+  color: var(--ttrpg-ui-color-text-primary);
   font-weight: 700;
   position: relative;
   padding-bottom: 2px;
@@ -102,13 +80,13 @@
   left:0; right:0;
   bottom:-1px;
   height:2px;
-  background: rgba(215,225,245,.55);
+  background: var(--ttrpg-ui-color-border-primary);
   border-radius:2px;
 }
 
 .ability-tile .ability-tile-divider {
   height:1px;
-  background: var(--divider);
+  background: var(--ttrpg-ui-color-border-primary);
   margin: 0 10px;
 }
 
@@ -122,7 +100,7 @@
 .ability-tile .ability-tile-value-wrapper .ability-tile-value {
   font-size: 44px;
   font-weight: 800;
-  color: var(--text);
+  color: var(--ttrpg-ui-color-text-primary);
   line-height: 1;
   text-shadow: 0 2px 0 rgba(0,0,0,.25);
 }
@@ -136,7 +114,7 @@
   gap:4px;
   font-size:12px;
   font-weight:700;
-  color:var(--muted);
+  color: var(--ttrpg-ui-color-text-secondary);
 }
 
 .ability-tile .ability-tile-footer {
@@ -146,6 +124,6 @@
   text-align:center;
   font-size: 13px;
   font-style: italic;
-  color: var(--saving);
+  color: var(--ttrpg-ui-color-text-secondary);
   text-shadow: 0 2px 6px rgba(0,0,0,.35);
 }

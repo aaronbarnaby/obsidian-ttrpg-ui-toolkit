@@ -11,10 +11,10 @@
   align-items: center;
   gap: 6px;
   padding: 8px 12px;
-  border: 1px solid var(--color-border-primary);
+  border: 1px solid var(--ttrpg-ui-color-border-primary);
   border-radius: 4px;
-  background-color: var(--color-bg-secondary);
-  color: var(--color-text-primary);
+  background-color: var(--ttrpg-ui-color-bg-secondary);
+  color: var(--ttrpg-ui-color-text-primary);
   cursor: pointer;
   font-size: 14px;
   font-weight: 500;
@@ -23,19 +23,19 @@
 }
 
 .event-button:hover {
-  background-color: var(--color-bg-hover);
-  border-color: var(--color-border-active);
+  background-color: var(--ttrpg-ui-color-bg-hover);
+  border-color: var(--ttrpg-ui-color-border-active);
   transform: translateY(-1px);
 }
 
 .event-button:active {
   transform: translateY(0);
-  background-color: var(--color-bg-darker);
+  background-color: var(--ttrpg-ui-color-bg-darker);
 }
 
 .event-button:focus {
   outline: none;
-  box-shadow: 0 0 0 2px var(--color-border-focus);
+  box-shadow: 0 0 0 2px var(--ttrpg-ui-color-border-focus);
 }
 
 .event-button-icon {
