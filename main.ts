@@ -53,7 +53,7 @@ export default class TTRPGUIToolkitPlugin extends Plugin {
 
       // Dynamic/Stateful
       new VitalsView(app, kv),
-      new InitiativeView(app, kv),
+      new InitiativeView(app, kv, this),
     ];
 
     for (const view of views) {

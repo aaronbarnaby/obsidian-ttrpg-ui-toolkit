@@ -6,9 +6,10 @@ import {
   loadEquipmentDataForFile,
   parseTemplateNumber,
 } from "@/lib/utils/template";
+import { equipmentService, DHEquipmentWithPath } from "@/lib/services/equipment/EquipmentService";
 import { DHAdversary } from "@/types/daggerheart/adversary";
-import { DHEquipment } from "@/types/daggerheart/equipment";
 import type { DHInitiativeAdversary, DHInitiativeCustomAdversary, DHInitiativeLinkAdversary } from "@/types/daggerheart/initiative";
+import type { Feature } from "@/types/features";
 
 export type Adversary = {
   key: string;
@@ -31,26 +32,36 @@ export function resolveAdversaryEntryToPath(
   return dest.path;
 }
 
+function normalizeFeature(raw: unknown): Feature {
+  if (raw == null || typeof raw !== "object") {
+    return { passives: [], actions: [] };
+  }
+  const o = raw as Record<string, unknown>;
+  return {
+    passives: Array.isArray(o.passives) ? o.passives : [],
+    actions: Array.isArray(o.actions) ? o.actions : [],
+  };
+}
+
 /**
- * Normalize one raw equipment entry (object or link string) to DHEquipment.
+ * Normalize one raw equipment entry (object or link string) to DHEquipmentWithPath.
  * When entry is a string and app/sourcePath are provided, resolves the link and loads
- * equipment data from the linked file's frontmatter via loadEquipmentDataForFile.
+ * equipment data from the linked file's frontmatter via loadEquipmentDataForFile (with filePath).
  */
 async function normalizeEquipmentItem(
   item: unknown,
   app?: App,
   sourcePath?: string
-): Promise<DHEquipment | null> {
+): Promise<DHEquipmentWithPath | null> {
   if (item == null) {
     return null;
   }
   if (typeof item === "string") {
-    const link = item.replace(/^\[\[|\]\]$/g, "").split("|")[0].trim();
     if (app && sourcePath) {
       const filePath = resolveAdversaryEntryToPath(app, item, sourcePath);
       if (filePath) {
         const equipment = await loadEquipmentDataForFile(app, filePath);
-        if (equipment) return equipment;
+        if (equipment) return { ...equipment, filePath };
       }
     }
     return null;
@@ -59,17 +70,19 @@ async function normalizeEquipmentItem(
     throw new Error("Equipment item must be an object or a string");
   }
   const o = item as Record<string, unknown>;
-  return equipmentFromFrontmatter(o);
+  const base = equipmentFromFrontmatter(o);
+  const features = o.features != null ? normalizeFeature(o.features) : undefined;
+  return { ...base, features };
 }
 
 async function normalizeEquipment(
   raw: unknown,
   app?: App,
   sourcePath?: string
-): Promise<DHEquipment[]> {
+): Promise<DHEquipmentWithPath[]> {
   if (raw == null) return [];
   const arr = Array.isArray(raw) ? raw : [raw];
-  const result: DHEquipment[] = [];
+  const result: DHEquipmentWithPath[] = [];
   for (const item of arr) {
     const equipment = await normalizeEquipmentItem(item, app, sourcePath);
     if (equipment) result.push(equipment);
@@ -156,10 +169,17 @@ export async function loadAdversaries(
 
   for (const item of adversaries) {
     if (isCustomAdversary(item)) {
-      const { type, key, ...data } = item;
+      const { type, key, ...rest } = item;
+      const resolvedEquipped = await equipmentService.resolveEquipmentList(
+        app,
+        sourcePath,
+        rest.equipped ?? [],
+        []
+      );
+      const data: DHAdversary = { ...rest, equipped: resolvedEquipped } as DHAdversary;
       result.push({
         key,
-        data: data as DHAdversary,
+        data,
         filePath: undefined,
         templateContext: undefined,
       });

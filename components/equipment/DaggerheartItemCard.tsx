@@ -40,7 +40,7 @@ export function DaggerheartItemCard({ item, onOpenFile }: DaggerheartItemCardPro
       </div>
       {hasFeatures && item.features && (
         <div className="equipment-item-features">
-          <FeaturesBlock data={item.features} />
+          <FeaturesBlock data={{...item.features, styles: { hideWrappers: true }}} />
         </div>
       )}
     </div>

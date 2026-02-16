@@ -14,14 +14,20 @@ export type DHInitiativeProps = {
   onStateChange: (newState: DHInitiativeState) => void;
   onPartyMemberVitalsToggle?: (filePath: string, key: string, newUsed: number) => void;
   onOpenFile?: (filePath: string) => void;
+  /** Called after expand/collapse so the host can run post-processors (e.g. dice) on new DOM. */
+  onAfterUpdate?: () => void;
 };
 
 export function DHInitiative(props: DHInitiativeProps) {
-  const { static: block, state, partyMembers, adversaries, onStateChange, onPartyMemberVitalsToggle, onOpenFile } = props;
+  const { static: block, state, partyMembers, adversaries, onStateChange, onPartyMemberVitalsToggle, onOpenFile, onAfterUpdate } = props;
 
   const [encounterCollapsed, setEncounterCollapsed] = React.useState(false);
   const [expandedPartyFilePath, setExpandedPartyFilePath] = React.useState<string | null>(null);
   const [expandedAdversaryKey, setExpandedAdversaryKey] = React.useState<string | null>(null);
+
+  React.useEffect(() => {
+    onAfterUpdate?.();
+  }, [expandedAdversaryKey, expandedPartyFilePath, encounterCollapsed, onAfterUpdate]);
 
   const getAdversaryVitals = (key: string) => {
     const entry = state.adversaries.find((adv) => adv.key === key);

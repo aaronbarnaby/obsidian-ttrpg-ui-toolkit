@@ -1,5 +1,6 @@
 import { App, MarkdownPostProcessorContext } from "obsidian";
 import * as React from "react";
+import { flushSync } from "react-dom";
 import { BaseView } from "@/features/shared/BaseView";
 import { ReactMarkdown } from "@/features/shared/ReactMarkdown";
 import { KeyValueStore } from "@/lib/services/kv/kv";
@@ -12,11 +13,18 @@ import { initiativeService } from "@/lib/services/initiative/InitiativeService";
 import { vitalsService } from "@/lib/services/vitals/VitalsService";
 import { ensureReactRoot } from "@/lib/utils/react-root";
 import { openFileInNewLeaf } from "@/lib/utils/open-file";
+import { diceInlinePostProcessor } from "@/features/dice/dicePostProcessor";
+
+type PluginLike = { settings: { diceResultDuration: number } };
 
 export class InitiativeView extends BaseView {
   public codeblock = "initiative";
 
-  constructor(app: App, private readonly kv: KeyValueStore) {
+  constructor(
+    app: App,
+    private readonly kv: KeyValueStore,
+    private readonly plugin: PluginLike
+  ) {
     super(app);
   }
 
@@ -27,7 +35,16 @@ export class InitiativeView extends BaseView {
       return;
     }
     if (initiativeBlock.type === "daggerheart") {
-      ctx.addChild(new DaggerHeartInitiativeMarkdown(el, source, this.app, this.kv, ctx));
+      ctx.addChild(
+        new DaggerHeartInitiativeMarkdown(
+          el,
+          source,
+          this.app,
+          this.kv,
+          ctx,
+          this.plugin.settings.diceResultDuration
+        )
+      );
       return;
     }
     throw new Error("Invalid initiative block type");
@@ -57,7 +74,8 @@ class DaggerHeartInitiativeMarkdown extends ReactMarkdown {
     private readonly source: string,
     private readonly app: App,
     private readonly kv: KeyValueStore,
-    private readonly ctx: MarkdownPostProcessorContext
+    private readonly ctx: MarkdownPostProcessorContext,
+    private readonly diceResultDuration: number
   ) {
     super(el);
   }
@@ -146,9 +164,15 @@ class DaggerHeartInitiativeMarkdown extends ReactMarkdown {
         );
       },
       onOpenFile: (filePath: string) => openFileInNewLeaf(this.app, filePath),
+      onAfterUpdate: () => {
+        diceInlinePostProcessor(this.containerEl, this.ctx, this.diceResultDuration);
+      },
     };
     this.reactRoot = ensureReactRoot(this.reactRoot, this.containerEl);
-    this.reactRoot.render(React.createElement(DHInitiative, data));
+    flushSync(() => {
+      this.reactRoot?.render(React.createElement(DHInitiative, data));
+    });
+    diceInlinePostProcessor(this.containerEl, this.ctx, this.diceResultDuration);
   }
 
   private async handleStateChange(

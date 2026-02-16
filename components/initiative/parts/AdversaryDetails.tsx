@@ -1,5 +1,8 @@
 import * as React from "react";
 import { Adversary } from "@/lib/services/adversary";
+import { FeaturesBlock } from "@/components/features/FeaturesBlock";
+import { DaggerheartEquipmentBlock } from "@/components/equipment/DaggerheartEquipmentBlock";
+import type { DHEquipmentWithPath } from "@/lib/services/equipment/EquipmentService";
 
 export interface AdversaryDetailsProps {
   adversary: Adversary;
@@ -7,6 +10,13 @@ export interface AdversaryDetailsProps {
 }
 
 export function AdversaryDetails({ adversary, onOpenAdversaryFile }: AdversaryDetailsProps) {
+  const features = adversary.templateContext?.features;
+  const hasFeatures =
+    features &&
+    (features.passives?.length > 0 || features.actions?.length > 0);
+  const equipped = (adversary.data.equipped ?? []) as DHEquipmentWithPath[];
+  const hasEquipment = equipped.length > 0;
+
   return (
     <div className="initiative-row-extra">
       <div className="initiative-row-extra-content">
@@ -41,6 +51,13 @@ export function AdversaryDetails({ adversary, onOpenAdversaryFile }: AdversaryDe
           </div>
         )}
       </div>
+      {hasFeatures && features && <FeaturesBlock data={features} />}
+      {hasEquipment && (
+        <DaggerheartEquipmentBlock
+          items={equipped}
+          onOpenFile={onOpenAdversaryFile}
+        />
+      )}
     </div>
   );
 }

@@ -173,6 +173,9 @@
   color: var(--ttrpg-ui-color-text-secondary);
   border-top: 1px solid var(--ttrpg-ui-color-border-primary);
   margin-top: 0.25rem;
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
 }
 
 .initiative-row-extra-content {

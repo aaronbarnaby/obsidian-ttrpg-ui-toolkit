@@ -1,7 +1,7 @@
 {
   "id": "ttrpg-ui-toolkit",
   "name": "TTRPG UI Toolkit",
-  "version": "0.4.1",
+  "version": "0.5.0",
   "minAppVersion": "0.15.0",
   "description": "Modern UI elements for running and playing TTRPGs",
   "author": "aaron.barnaby",
